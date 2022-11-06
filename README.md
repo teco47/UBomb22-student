@@ -36,6 +36,65 @@ fait apparaître une carte minimaliste, chargée statiquement en mémoire, dans 
     $ ./gradlew run
 
 
+Le jeu utilise quelques fonctionnalités nouvelles de Java qui n'ont pas été vues en cours ou en TD :
+
+### Switch Expression (Java 13)
+
+Les expressions `Switch` peuvent désormais retourner une valeur et vous pouvez utiliser une syntaxe de style lambda. 
+
+```java
+boolean result = switch (status) {
+    case SUBSCRIBER -> true;
+    case FREE_TRIAL -> false;
+    default -> throw new IllegalArgumentException("something is murky!");
+};
+```
+
+### Records (Java 14)
+
+Il existe désormais des classes d'enregistrement (`record`) qui permettent de ne pas devoir écrire beaucoup de code pour manipuler des champs *immutables* (déclarés avec `final`). Ainsi le code suivant :
+
+```java
+final class Point {
+    private final int x;
+    private final int y;
+
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int x() { return x; }
+    public int y() { return y; }
+
+    // state-based implementations of equals, hashCode, toString
+    // nothing else
+}
+```
+s'écrit simplement par :
+```java
+record Point(int x, int y) { }
+```
+
+
+### Pattern Matching pour InstanceOf (Java 14)
+
+Alors que précédemment vous deviez écrire :
+
+```java
+if (obj instanceof String) {
+    String s = (String) obj;
+    // use s
+}
+```
+
+vous pouvez maintenant écrire directement 
+```java
+if (obj instanceof String s) {
+    System.out.println(s.contains("hello"));
+}
+```
+
 Travail à fournir
 =================
 
@@ -108,7 +167,7 @@ Bonus | Effet
 
 ## Déplacement des caisses
 
- Les caisses doivent pouvoir être déplacées par le joueur si rien ne gêne dans le sens de la poussée. Le joueur ne peut déplacer qu'une seule caisse à la fois. Si un bonus ou un monstre se trouve dans la direction de déplacement d’une caisse, la caisse reste bloquée. Le joueur ne peut pas déplacer deux caisses à la fois. 
+ Les caisses doivent pouvoir être déplacées par le joueur si rien ne gêne dans le sens de la poussée. Le joueur ne peut déplacer qu'une seule caisse à la fois. Si un bonus ou un monstre se trouve dans la direction de déplacement d’une caisse, la caisse reste bloquée. Le joueur ne peut pas déplacer deux caisses à la fois. Vous pouvez représenter les caisses comme des éléments de décor. Dans ce cas, déplacer une caisse revient à la supprimer et en créer une nouvelle aux bonnes coordonnées.
 
 ## Gestion des bombes
 
@@ -135,13 +194,15 @@ Le joueur peut perdre une vie s’il se trouve sur une case à portée de l’ex
 
 Les déplacements des monstres sont entièrement aléatoires. Une collision avec un monstre déclenche la perte d’une vie. Commencer par ajouter un seul monstre à la fois, puis augmenter le nombre de monstres. Les monstres ne peuvent pas ramasser les bonus qui se trouvent sur le sol. Les monstres ont peur des portes et ne peuvent pas les franchir. Ils ne peuvent pas marcher sur les cases des portes. Les monstres ne peuvent pas déplacer les cartes. 
 
-La vitesse de déplacement des monstres augmente en fonction des niveaux. De même, les monstres plus évolués des derniers niveaux peuvent avoir plusieurs vies. Il n'est pas demandé d'afficher les vies restantes d'un monstre. 
-
-**Pour aller plus loin.** Faire en sorte que la vitesse de déplacement des monstres soit faible dans les premiers niveaux et augmente plus on se rapproche de la
-princesse. Ajouter ensuite un module d’intelligence artificielle pour que les monstres des derniers niveaux se dirigent vers le joueur et non plus de manière aléatoire.
-
 ## Fin de partie
 
 La partie est finie lorsque le joueur arrive sur la case de la
 princesse. Les monstres ne veulent pas de mal à la princesse, mais feront
 tout pour la garder prisonnière. La touche `[ESCAPE]` permet de quitter la partie à tout moment.
+
+
+## Pour aller plus loin et gagner des points bonus
+
+- Faire en sorte que la vitesse de déplacement des monstres soit faible dans les premiers niveaux et augmente plus on se rapproche de la princesse. 
+- Faire en sorte que les monstres possèdent une vie supplémentaire tous les 2 niveaux (2 vies à partir du niveau 2, 3 vies à partir du niveau 4, …)  Il n'est pas demandé d'afficher les vies restantes d'un monstre. 
+- Faire en sorte que les monstres du dernier niveau se dirigent vers le joueur et non plus de manière aléatoire.

@@ -17,7 +17,7 @@ public class Player extends GameObject implements Movable, TakeVisitor {
 
     private Direction direction;
     private boolean moveRequested = false;
-    private int lives;
+    private final int lives;
 
     public Player(Game game, Position position) {
         super(game, position);
