@@ -31,7 +31,7 @@ Chaque monde est représenté par une carte (rectangulaire) composée de cellule
 ## Prise en main
 
 Nous vous fournissons une première ébauche du jeu, utilisant la bibliothèque JavaFX. Le lancement du jeu
-fait apparaître une carte minimaliste, chargée statiquement en mémoire, dans laquelle le joueur peut se déplacer dans toutes les directions, quelle que soit la nature des cellules. Le code utilise `gradle` comme moteur de production. Il suffit de lancer la commande suivante pour compiler et exécuter le jeu. Toutes les dépendances seront automatiquement téléchargées et installées. Le jeu nécessite une version de Java au moins égale à 14. La version 17 est recommandée car il s'agit de la dernière version LTS (*Long Term Support*).
+fait apparaître une carte minimaliste, chargée statiquement en mémoire, dans laquelle le joueur peut se déplacer dans toutes les directions, quelle que soit la nature des cellules. Le code utilise `gradle` comme moteur de production. Il suffit de lancer la commande suivante pour compiler et exécuter le jeu. Toutes les dépendances seront automatiquement téléchargées et installées. Le jeu nécessite une version de Java au moins égale à 14. La version 17 est recommandée car il s'agit de la dernière version LTS (*Long Term Support*). Pour utiliser Java 17 sur les machines du CREMI, il suffit d'exécuter la commande `source  /opt/local/bin/java17.env` dans votre fichier de configuration. 
 
     $ ./gradlew run
 
