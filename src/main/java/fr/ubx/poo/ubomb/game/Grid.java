@@ -19,4 +19,6 @@ public interface Grid {
     boolean inside(Position nextPos);
 
     void set(Position position, Decor decor);
+
+    HashSet<Position> monstersSet();
 }

@@ -15,9 +15,11 @@ import javafx.stage.Stage;
 import java.io.*;
 
 public class GameLauncherView extends BorderPane {
+
     private final FileChooser fileChooser = new FileChooser();
 
     public GameLauncherView(Stage stage)  {
+
         // Create menu
         MenuBar menuBar = new MenuBar();
         Menu menuFile = new Menu("File");
@@ -60,6 +62,4 @@ public class GameLauncherView extends BorderPane {
         exitItem.setOnAction(e -> System.exit(0));
 
     }
-
-
 }

@@ -1,5 +1,6 @@
 package fr.ubx.poo.ubomb.game;
 
+import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.decor.bonus.*;
 import fr.ubx.poo.ubomb.go.decor.*;
 import fr.ubx.poo.ubomb.launcher.Entity;
@@ -17,6 +18,7 @@ public class Level implements Grid {
 
 
     private final Map<Position, Decor> elements = new HashMap<>();
+    private final HashSet<Position> characterMonster = new HashSet<>();
 
     public Level(MapLevel entities) {
         this.entities = entities;
@@ -36,6 +38,9 @@ public class Level implements Grid {
                         break;
                     case Key:
                         elements.put(position, new Key(position));
+                        break;
+                    case Monster:
+                        characterMonster.add(position);
                         break;
                     case Empty: break;
                     default:
@@ -81,5 +86,7 @@ public class Level implements Grid {
             elements.put(position, decor);
     }
 
-
+    public HashSet<Position> monstersSet(){
+        return characterMonster;
+    }
 }
