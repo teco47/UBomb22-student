@@ -13,6 +13,9 @@ import fr.ubx.poo.ubomb.go.TakeVisitor;
 import fr.ubx.poo.ubomb.go.decor.bonus.Bonus;
 import fr.ubx.poo.ubomb.go.decor.bonus.Key;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Monster extends GameObject implements Movable, TakeVisitor {
 
     private Direction direction;
@@ -34,9 +37,12 @@ public class Monster extends GameObject implements Movable, TakeVisitor {
     public void doMove(Direction direction) {
         // This method is called only if the move is possible, do not check again
         Position nextPos = direction.nextPosition(getPosition());
-        GameObject next = game.grid().get(nextPos);
-        if (next instanceof Bonus bonus) {
-                //bonus.takenBy(this);
+        List<GameObject> next = new ArrayList<>();
+        next = game.getGameObjects(nextPos);
+        for (GameObject go : next) {
+            if (go instanceof Player player){
+                player.updateLives(-1);
+            }
         }
         setPosition(nextPos);
     }

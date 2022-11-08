@@ -1,15 +1,12 @@
 package fr.ubx.poo.ubomb.game;
 
+import fr.ubx.poo.ubomb.engine.Timer;
 import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.character.Player;
 import fr.ubx.poo.ubomb.go.character.Princess;
 
-import javax.xml.crypto.dsig.keyinfo.KeyValue;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Game {
 
@@ -20,6 +17,11 @@ public class Game {
 
     private final Grid grid;
 
+    // List of Timer
+    // 0 - Invisibility of Player
+    private final List<Timer> listTimer;
+    private final Map<String, Integer> nameTimer;
+
     public Game(Configuration configuration, Grid grid) {
         this.configuration = configuration;
         this.grid = grid;
@@ -29,6 +31,11 @@ public class Game {
             monsters.add(new Monster(this,pos));
         }
         princess = new Princess(this, grid.getPrincess());
+
+        listTimer = new ArrayList<>();
+        nameTimer = new HashMap<>();
+        listTimer.add(new Timer(configuration.playerInvisibilityTime()));
+        nameTimer.put("Player Invisibility",0);
     }
 
     public Configuration configuration() {
@@ -40,6 +47,9 @@ public class Game {
         List<GameObject> gos = new LinkedList<>();
         if (player().getPosition().equals(position))
             gos.add(player);
+        if(princess().getPosition().equals(position)){
+            gos.add(princess);
+        }
         for (Monster m : monsters) {
             if(m.getPosition().equals(position)){
                 gos.add(m);
@@ -58,4 +68,9 @@ public class Game {
 
     public  Princess princess(){ return this.princess;}
     public HashSet<Monster> monster(){ return this.monsters;}
+
+    public List<Timer> getListTimer(){ return this.listTimer;}
+    public int nameTimer(String name){
+        return nameTimer.get(name);
+    }
 }

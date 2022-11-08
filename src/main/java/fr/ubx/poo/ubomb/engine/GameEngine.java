@@ -26,10 +26,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 public final class GameEngine {
@@ -101,6 +98,13 @@ public final class GameEngine {
                 createNewBombs(now);
                 checkCollision(now);
                 checkExplosions();
+
+                //do Timer
+                for (Timer t : game.getListTimer()){
+                    if( t.isRunning()){
+                        t.update(System.currentTimeMillis());
+                    }
+                }
 
                 // Graphic update
                 cleanupSprites();
