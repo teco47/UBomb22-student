@@ -21,4 +21,5 @@ public interface Grid {
     void set(Position position, Decor decor);
 
     HashSet<Position> monstersSet();
+    public Position getPrincess();
 }

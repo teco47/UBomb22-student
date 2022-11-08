@@ -22,7 +22,7 @@ public class Monster extends GameObject implements Movable, TakeVisitor {
     public Monster(Game game, Position position) {
         super(game, position);
         this.direction = Direction.DOWN;
-        this.lives = game.configuration().playerLives();
+        this.lives = 1;
     }
 
 

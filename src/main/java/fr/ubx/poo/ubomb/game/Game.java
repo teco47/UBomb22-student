@@ -3,6 +3,7 @@ package fr.ubx.poo.ubomb.game;
 import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.character.Player;
+import fr.ubx.poo.ubomb.go.character.Princess;
 
 import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import java.util.HashSet;
@@ -14,7 +15,9 @@ public class Game {
 
     private final Configuration configuration;
     private final Player player;
+    private final Princess princess;
     private HashSet<Monster> monsters;
+
     private final Grid grid;
 
     public Game(Configuration configuration, Grid grid) {
@@ -25,6 +28,7 @@ public class Game {
         for(Position pos : grid().monstersSet()){
             monsters.add(new Monster(this,pos));
         }
+        princess = new Princess(this, grid.getPrincess());
     }
 
     public Configuration configuration() {
@@ -52,5 +56,6 @@ public class Game {
         return this.player;
     }
 
+    public  Princess princess(){ return this.princess;}
     public HashSet<Monster> monster(){ return this.monsters;}
 }
