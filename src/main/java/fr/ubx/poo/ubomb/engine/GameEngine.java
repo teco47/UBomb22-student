@@ -129,6 +129,7 @@ public final class GameEngine {
 
     private void checkCollision(long now) {
         // Check a collision between a monster and the player
+
     }
 
     private void processInput(long now) {

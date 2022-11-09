@@ -75,7 +75,7 @@ public class Level implements Grid {
 
     @Override
     public boolean inside(Position position) {
-        return true;
+        return position.y()<height && position.y()>=0 && position.x()<width && position.x()>=0;
     }
 
     @Override

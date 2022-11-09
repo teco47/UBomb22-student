@@ -7,5 +7,4 @@ public interface TakeVisitor {
     // Key
     default void take(Key key) {}
 
-
 }
