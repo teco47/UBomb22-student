@@ -13,7 +13,8 @@ public class Game {
     private final Configuration configuration;
     private final Player player;
     private final Princess princess;
-    private List<Monster> monsters;
+    final private List<Monster> monsters;
+    public BombParameter bombParameter;
 
     private final Grid grid;
     private boolean onPrincess;
@@ -25,6 +26,7 @@ public class Game {
 
     public Game(Configuration configuration, Grid grid) {
         this.configuration = configuration;
+        bombParameter = new BombParameter(this.configuration().bombBagCapacity());
         this.grid = grid;
         player = new Player(this, configuration.playerPosition());
         monsters = new ArrayList<>();
@@ -74,6 +76,10 @@ public class Game {
         return gos;
     }
 
+    public void removeBonus(Position position){
+        grid.remove(position);
+    }
+
     public Grid grid() {
         return grid;
     }
@@ -89,7 +95,6 @@ public class Game {
     public int nameTimer(String name){
         return nameTimer.get(name);
     }
-
     public void setOnPrincess(boolean on){
         onPrincess = on;
     }

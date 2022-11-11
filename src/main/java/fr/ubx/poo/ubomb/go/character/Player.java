@@ -4,6 +4,7 @@
 
 package fr.ubx.poo.ubomb.go.character;
 
+import fr.ubx.poo.ubomb.game.BombParameter;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
@@ -17,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends GameObject implements Movable, TakeVisitor {
-
     private Direction direction;
     private boolean moveRequested = false;
     private int lives;
@@ -41,12 +41,14 @@ public class Player extends GameObject implements Movable, TakeVisitor {
     }
 
     @Override
-    public void take(BombRange bombBonus) {
-        System.out.println("Take the bomb range " + (bombBonus.getBonus()?"increase":"decrease") + " ...");
+    public void take(BombRange bombRange) {
+        game.bombParameter.updateRange((bombRange.getBonus()?1:-1));
+        System.out.println("Take the bomb range " + (bombRange.getBonus()?"increase":"decrease") + " ...");
     }
 
     @Override
     public void take(BombCount bombCount) {
+        game.bombParameter.updateCount((bombCount.getBonus()?1:-1));
         System.out.println("Take the bomb count " + (bombCount.getBonus()?"increase":"decrease") + " ...");
     }
 
@@ -57,6 +59,7 @@ public class Player extends GameObject implements Movable, TakeVisitor {
         next.add(game.grid().get(nextPos));
         if (next.get(0) instanceof Bonus bonus) {
             bonus.takenBy(this);
+            bonus.remove();
         }
         next = game.getGameObjects(nextPos);
         for (GameObject go : next) {

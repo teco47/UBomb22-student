@@ -73,7 +73,7 @@ public final class GameEngine {
         root.getChildren().add(layer);
         statusBar = new StatusBar(root, sceneWidth, sceneHeight, game);
 
-        // Create sprites
+        // Create decors
         for (var decor : game.grid().values()) {
             sprites.add(SpriteFactory.create(layer, decor));
             decor.setModified(true);
@@ -81,6 +81,7 @@ public final class GameEngine {
 
         sprites.add(new SpritePlayer(layer, player));
         if(princess!=null){ sprites.add(new SpritePrincess(layer,princess)); }
+
         for(Monster m : monsters){
             sprites.add((new SpriteMonster(layer,m)));
         }
