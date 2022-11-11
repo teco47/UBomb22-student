@@ -31,7 +31,9 @@ public class Game {
         for(Position pos : grid().monstersSet()){
             monsters.add(new Monster(this,pos,monsters.size()));
         }
-        princess = new Princess(this, grid.getPrincess());
+        if(grid.getPrincess() != null){
+            princess = new Princess(this, grid.getPrincess());
+        } else { princess = null;}
         onPrincess = false;
 
         listTimer = new ArrayList<>();
@@ -60,9 +62,10 @@ public class Game {
         List<GameObject> gos = new LinkedList<>();
         if (player().getPosition().equals(position))
             gos.add(player);
-        if(princess().getPosition().equals(position)){
+        if(princess!=null && princess().getPosition().equals(position)){
             gos.add(princess);
         }
+
         for (Monster m : monsters) {
             if(m.getPosition().equals(position)){
                 gos.add(m);

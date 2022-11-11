@@ -80,7 +80,7 @@ public final class GameEngine {
         }
 
         sprites.add(new SpritePlayer(layer, player));
-        sprites.add(new SpritePrincess(layer,princess));
+        if(princess!=null){ sprites.add(new SpritePrincess(layer,princess)); }
         for(Monster m : monsters){
             sprites.add((new SpriteMonster(layer,m)));
         }

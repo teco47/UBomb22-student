@@ -55,7 +55,7 @@ public class Player extends GameObject implements Movable, TakeVisitor {
         Position nextPos = direction.nextPosition(getPosition());
         List<GameObject> next = new ArrayList<>();
         next.add(game.grid().get(nextPos));
-        if (next instanceof Bonus bonus) {
+        if (next.get(0) instanceof Bonus bonus) {
             bonus.takenBy(this);
         }
         next = game.getGameObjects(nextPos);
