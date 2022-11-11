@@ -19,6 +19,7 @@ public class Level implements Grid {
 
     private final Map<Position, Decor> elements = new HashMap<>();
     private final HashSet<Position> characterMonster = new HashSet<>();
+    private Position princess;
 
     public Level(MapLevel entities) {
         this.entities = entities;
@@ -41,6 +42,9 @@ public class Level implements Grid {
                         break;
                     case Monster:
                         characterMonster.add(position);
+                        break;
+                    case Princess:
+                        princess = position;
                         break;
                     case Empty: break;
                     default:
@@ -88,5 +92,9 @@ public class Level implements Grid {
 
     public HashSet<Position> monstersSet(){
         return characterMonster;
+    }
+
+    public Position getPrincess(){
+        return princess;
     }
 }

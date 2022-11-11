@@ -9,6 +9,7 @@ import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.character.Player;
+import fr.ubx.poo.ubomb.go.character.Princess;
 import fr.ubx.poo.ubomb.view.*;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
@@ -25,10 +26,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 public final class GameEngine {
@@ -36,7 +34,8 @@ public final class GameEngine {
     private static AnimationTimer gameLoop;
     private final Game game;
     private final Player player;
-    private final HashSet<Monster> monsters;
+    private final Princess princess;
+    private final List<Monster> monsters;
     private final List<Sprite> sprites = new LinkedList<>();
     private final Set<Sprite> cleanUpSprites = new HashSet<>();
     private final Stage stage;
@@ -48,6 +47,7 @@ public final class GameEngine {
         this.stage = stage;
         this.game = game;
         this.player = game.player();
+        this.princess = game.princess();
         this.monsters = game.monster();
         initialize();
         buildAndSetGameLoop();
@@ -80,9 +80,11 @@ public final class GameEngine {
         }
 
         sprites.add(new SpritePlayer(layer, player));
+        sprites.add(new SpritePrincess(layer,princess));
         for(Monster m : monsters){
             sprites.add((new SpriteMonster(layer,m)));
         }
+
     }
 
     void buildAndSetGameLoop() {
@@ -96,6 +98,22 @@ public final class GameEngine {
                 createNewBombs(now);
                 checkCollision(now);
                 checkExplosions();
+
+                for(int m=0; m< monsters.size(); m++){
+                    if(!game.getListTimer().get(game.nameTimer("Monster Velocity Timer "+m)).isRunning()){
+                        System.out.println("Un monstre bouge");
+                        monsters.get(m).moveMonster();
+                    } else {
+                        System.out.println("Monstre "+m+" : "+game.getListTimer().get(game.nameTimer("Monster Velocity Timer "+m)).remaining());
+                    }
+                }
+
+                //do Timer
+                for (Timer t : game.getListTimer()){
+                    if(t.isRunning()){
+                        t.update(System.nanoTime());
+                    }
+                }
 
                 // Graphic update
                 cleanupSprites();
@@ -170,6 +188,9 @@ public final class GameEngine {
 
     private void update(long now) {
         player.update(now);
+        for (Monster m : monsters) {
+            m.update(now);
+        }
 
         if (player.getLives() == 0) {
             gameLoop.stop();

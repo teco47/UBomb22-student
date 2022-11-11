@@ -15,11 +15,14 @@ import fr.ubx.poo.ubomb.go.Walkable;
 import fr.ubx.poo.ubomb.go.decor.Decor;
 import fr.ubx.poo.ubomb.go.decor.bonus.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Player extends GameObject implements Movable, TakeVisitor {
 
     private Direction direction;
     private boolean moveRequested = false;
-    private final int lives;
+    private int lives;
 
     public Player(Game game, Position position) {
         super(game, position);
@@ -36,9 +39,16 @@ public class Player extends GameObject implements Movable, TakeVisitor {
     public void doMove(Direction direction) {
         // This method is called only if the move is possible, do not check again
         Position nextPos = direction.nextPosition(getPosition());
-        GameObject next = game.grid().get(nextPos);
+        List<GameObject> next = new ArrayList<>();
+        next.add(game.grid().get(nextPos));
         if (next instanceof Bonus bonus) {
-                bonus.takenBy(this);
+            bonus.takenBy(this);
+        }
+        next = game.getGameObjects(nextPos);
+        for (GameObject go : next) {
+            if (go instanceof Monster){
+                updateLives(-1);
+            }
         }
         setPosition(nextPos);
     }
@@ -46,6 +56,14 @@ public class Player extends GameObject implements Movable, TakeVisitor {
 
     public int getLives() {
         return lives;
+    }
+
+    public void updateLives(int change){
+        if(!game.getListTimer().get(game.nameTimer("Player Invisibility")).isRunning()){
+            lives += change;
+            game.getListTimer().get(game.nameTimer("Player Invisibility")).start();
+            System.out.println("Vous avez reçu "+change+" vies");
+        }
     }
 
     public Direction getDirection() {
