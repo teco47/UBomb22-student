@@ -35,7 +35,7 @@ public final class GameEngine {
     private final Game game;
     private final Player player;
     private final Princess princess;
-    private final HashSet<Monster> monsters;
+    private final List<Monster> monsters;
     private final List<Sprite> sprites = new LinkedList<>();
     private final Set<Sprite> cleanUpSprites = new HashSet<>();
     private final Stage stage;
@@ -99,10 +99,19 @@ public final class GameEngine {
                 checkCollision(now);
                 checkExplosions();
 
+                for(int m=0; m< monsters.size(); m++){
+                    if(!game.getListTimer().get(game.nameTimer("Monster Velocity Timer "+m)).isRunning()){
+                        System.out.println("Un monstre bouge");
+                        monsters.get(m).moveMonster();
+                    } else {
+                        System.out.println("Monstre "+m+" : "+game.getListTimer().get(game.nameTimer("Monster Velocity Timer "+m)).remaining());
+                    }
+                }
+
                 //do Timer
                 for (Timer t : game.getListTimer()){
-                    if( t.isRunning()){
-                        t.update(System.currentTimeMillis());
+                    if(t.isRunning()){
+                        t.update(System.nanoTime());
                     }
                 }
 
@@ -178,6 +187,9 @@ public final class GameEngine {
 
     private void update(long now) {
         player.update(now);
+        for (Monster m : monsters) {
+            m.update(now);
+        }
 
         if (player.getLives() == 0) {
             gameLoop.stop();

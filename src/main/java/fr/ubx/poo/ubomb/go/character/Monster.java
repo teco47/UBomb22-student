@@ -4,6 +4,7 @@
 
 package fr.ubx.poo.ubomb.go.character;
 
+import fr.ubx.poo.ubomb.engine.Timer;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
@@ -15,17 +16,20 @@ import fr.ubx.poo.ubomb.go.decor.bonus.Key;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Monster extends GameObject implements Movable, TakeVisitor {
 
     private Direction direction;
     private boolean moveRequested = false;
     private final int lives;
+    private final int numMonster;
 
-    public Monster(Game game, Position position) {
+    public Monster(Game game, Position position, int numMonster) {
         super(game, position);
         this.direction = Direction.DOWN;
         this.lives = 1;
+        this.numMonster = numMonster;
     }
 
 
@@ -45,6 +49,7 @@ public class Monster extends GameObject implements Movable, TakeVisitor {
             }
         }
         setPosition(nextPos);
+        game.getListTimer().get(game.nameTimer("Monster Velocity Timer "+numMonster)).start();
     }
 
 
@@ -76,6 +81,22 @@ public class Monster extends GameObject implements Movable, TakeVisitor {
             }
         }
         moveRequested = false;
+    }
+
+    public void moveMonster(){
+        Random rand = new Random();
+        int direction = rand.nextInt(4);
+        switch (direction){
+            case 0:
+                requestMove(Direction.UP);
+            case 1:
+                requestMove(Direction.DOWN);
+            case 2:
+                requestMove(Direction.LEFT);
+            case 3:
+                requestMove(Direction.RIGHT);
+        }
+
     }
 
     @Override

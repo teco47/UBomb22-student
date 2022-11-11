@@ -57,9 +57,11 @@ public class Player extends GameObject implements Movable, TakeVisitor {
     }
 
     public void updateLives(int change){
-        lives += change;
-        game.getListTimer().get(game.nameTimer("Player Invisibility")).start();
-        System.out.println("Vous avez reçu "+change+" vies");
+        if(!game.getListTimer().get(game.nameTimer("Player Invisibility")).isRunning()){
+            lives += change;
+            game.getListTimer().get(game.nameTimer("Player Invisibility")).start();
+            System.out.println("Vous avez reçu "+change+" vies");
+        }
     }
 
     public Direction getDirection() {
