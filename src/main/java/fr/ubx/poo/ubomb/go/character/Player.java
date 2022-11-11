@@ -48,6 +48,8 @@ public class Player extends GameObject implements Movable, TakeVisitor {
         for (GameObject go : next) {
             if (go instanceof Monster){
                 updateLives(-1);
+            } else if(go instanceof Princess){
+                game.setOnPrincess(true);
             }
         }
         setPosition(nextPos);

@@ -16,6 +16,7 @@ public class Game {
     private List<Monster> monsters;
 
     private final Grid grid;
+    private boolean onPrincess;
 
     // List of Timer
     // 0 - Invisibility of Player
@@ -31,6 +32,7 @@ public class Game {
             monsters.add(new Monster(this,pos,monsters.size()));
         }
         princess = new Princess(this, grid.getPrincess());
+        onPrincess = false;
 
         listTimer = new ArrayList<>();
         nameTimer = new HashMap<>();
@@ -43,7 +45,8 @@ public class Game {
         nameTimer.put("Player Invisibility",nbTimer++);
 
         for(int m=0; m< monsters.size(); m++){
-            listTimer.add(new Timer(configuration.monsterVelocity()));
+            Random rand = new Random();
+            listTimer.add(new Timer(configuration.monsterVelocity()*(int)(500* rand.nextDouble(0.75,1.25))));
             nameTimer.put("Monster Velocity Timer "+m,nbTimer++);
         }
     }
@@ -76,11 +79,16 @@ public class Game {
         return this.player;
     }
 
-    public  Princess princess(){ return this.princess;}
+    public Princess princess(){ return this.princess;}
     public List<Monster> monster(){ return this.monsters;}
 
     public List<Timer> getListTimer(){ return this.listTimer;}
     public int nameTimer(String name){
         return nameTimer.get(name);
     }
+
+    public void setOnPrincess(boolean on){
+        onPrincess = on;
+    }
+    public boolean getOnPrincess() { return onPrincess;}
 }
