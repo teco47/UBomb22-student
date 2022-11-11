@@ -7,7 +7,7 @@ package fr.ubx.poo.ubomb.go.decor;
 import fr.ubx.poo.ubomb.game.Position;
 
 public class Door extends Decor {
-    boolean open;
+    private boolean open;
     public Door(Position position) {
         super(position);
         open = false;

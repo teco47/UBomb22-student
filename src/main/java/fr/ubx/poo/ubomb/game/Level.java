@@ -1,6 +1,5 @@
 package fr.ubx.poo.ubomb.game;
 
-import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.decor.bonus.*;
 import fr.ubx.poo.ubomb.go.decor.*;
 import fr.ubx.poo.ubomb.launcher.Entity;
@@ -42,12 +41,27 @@ public class Level implements Grid {
                     case Key:
                         elements.put(position, new Key(position));
                         break;
+                    case Heart:
+                        elements.put(position, new Heart(position));
+                        break;
                     case DoorPrevOpened:
                     case DoorNextOpened:
                         elements.put(position, new Door(position,true));
                         break;
                     case DoorNextClosed:
                         elements.put(position, new Door(position));
+                        break;
+                    case BombRangeInc:
+                        elements.put(position, new BombRange(position));
+                        break;
+                    case BombRangeDec:
+                        elements.put(position, new BombRange(position, false));
+                        break;
+                    case BombNumberInc:
+                        elements.put(position, new BombCount(position));
+                        break;
+                    case BombNumberDec:
+                        elements.put(position, new BombCount(position, false));
                         break;
                     case Monster:
                         characterMonster.add(position);

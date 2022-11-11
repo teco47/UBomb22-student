@@ -4,14 +4,12 @@
 
 package fr.ubx.poo.ubomb.go.character;
 
-import fr.ubx.poo.ubomb.engine.Timer;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.Movable;
 import fr.ubx.poo.ubomb.go.TakeVisitor;
-import fr.ubx.poo.ubomb.go.Walkable;
 import fr.ubx.poo.ubomb.go.decor.Decor;
 import fr.ubx.poo.ubomb.go.decor.bonus.*;
 
@@ -19,7 +17,7 @@ public class Player extends GameObject implements Movable, TakeVisitor {
 
     private Direction direction;
     private boolean moveRequested = false;
-    private final int lives;
+    private int lives;
 
     public Player(Game game, Position position) {
         super(game, position);
@@ -31,6 +29,22 @@ public class Player extends GameObject implements Movable, TakeVisitor {
     @Override
     public void take(Key key) {
         System.out.println("Take the key ...");
+    }
+
+    @Override
+    public void take(Heart heart) {
+        lives++;
+        System.out.println("Take the heart ...");
+    }
+
+    @Override
+    public void take(BombRange bombBonus) {
+        System.out.println("Take the bomb range " + (bombBonus.getBonus()?"increase":"decrease") + " ...");
+    }
+
+    @Override
+    public void take(BombCount bombCount) {
+        System.out.println("Take the bomb count " + (bombCount.getBonus()?"increase":"decrease") + " ...");
     }
 
     public void doMove(Direction direction) {
