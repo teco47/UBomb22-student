@@ -36,8 +36,18 @@ public class Level implements Grid {
                     case Tree:
                         elements.put(position, new Tree(position));
                         break;
+                    case Box:
+                        elements.put(position, new Box(position));
+                        break;
                     case Key:
                         elements.put(position, new Key(position));
+                        break;
+                    case DoorPrevOpened:
+                    case DoorNextOpened:
+                        elements.put(position, new Door(position,true));
+                        break;
+                    case DoorNextClosed:
+                        elements.put(position, new Door(position));
                         break;
                     case Monster:
                         characterMonster.add(position);
