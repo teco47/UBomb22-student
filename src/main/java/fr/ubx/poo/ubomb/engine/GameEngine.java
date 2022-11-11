@@ -101,10 +101,7 @@ public final class GameEngine {
 
                 for(int m=0; m< monsters.size(); m++){
                     if(!game.getListTimer().get(game.nameTimer("Monster Velocity Timer "+m)).isRunning()){
-                        System.out.println("Un monstre bouge");
                         monsters.get(m).moveMonster();
-                    } else {
-                        System.out.println("Monstre "+m+" : "+game.getListTimer().get(game.nameTimer("Monster Velocity Timer "+m)).remaining());
                     }
                 }
 
@@ -195,6 +192,10 @@ public final class GameEngine {
         if (player.getLives() == 0) {
             gameLoop.stop();
             showMessage("Perdu!", Color.RED);
+        }
+        if (game.getOnPrincess()) {
+            gameLoop.stop();
+            showMessage("Victoire", Color.RED);
         }
     }
 
