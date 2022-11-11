@@ -7,4 +7,7 @@ public interface Walkable {
     default boolean walkableBy(Player player) {
         return false;
     }
+    default boolean walkableBy(Monster monster) {
+        return false;
+    }
 }
