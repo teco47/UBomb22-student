@@ -53,6 +53,9 @@ public class Game {
             listTimer.add(new Timer(configuration.monsterVelocity()*(int)(500* rand.nextDouble(0.75,1.25))));
             nameTimer.put("Monster Velocity Timer "+m,nbTimer++);
         }
+
+        listTimer.add(new Timer(1000));
+        nameTimer.put("bomb step",nbTimer++);
     }
 
     public Configuration configuration() {

@@ -7,6 +7,7 @@ package fr.ubx.poo.ubomb.engine;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
+import fr.ubx.poo.ubomb.go.character.Bomb;
 import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.character.Player;
 import fr.ubx.poo.ubomb.go.character.Princess;
@@ -36,6 +37,8 @@ public final class GameEngine {
     private final Player player;
     private final Princess princess;
     private final List<Monster> monsters;
+
+    private final List<Bomb> bomb;
     private final List<Sprite> sprites = new LinkedList<>();
     private final Set<Sprite> cleanUpSprites = new HashSet<>();
     private final Stage stage;
@@ -49,6 +52,7 @@ public final class GameEngine {
         this.player = game.player();
         this.princess = game.princess();
         this.monsters = game.monster();
+        this.bomb = new ArrayList<Bomb>();
         initialize();
         buildAndSetGameLoop();
     }
@@ -85,7 +89,6 @@ public final class GameEngine {
         for(Monster m : monsters){
             sprites.add((new SpriteMonster(layer,m)));
         }
-
     }
 
     void buildAndSetGameLoop() {
@@ -141,6 +144,7 @@ public final class GameEngine {
 
     private void createNewBombs(long now) {
         // Create a new Bomb is needed
+        // sprites.add((new SpriteBomb(layer,new Bomb(game, game.player().getPosition()))));
     }
 
     private void checkCollision(long now) {
@@ -197,6 +201,10 @@ public final class GameEngine {
         if (game.getOnPrincess()) {
             gameLoop.stop();
             showMessage("Victoire", Color.RED);
+        }
+
+        if(game.getListTimer().get(game.nameTimer("bomb step")).isRunning()){
+            bomb.get(0).updateCountdow(-1);
         }
     }
 
