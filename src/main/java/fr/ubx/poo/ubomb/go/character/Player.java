@@ -4,7 +4,6 @@
 
 package fr.ubx.poo.ubomb.go.character;
 
-import fr.ubx.poo.ubomb.game.BombParameter;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
@@ -32,6 +31,7 @@ public class Player extends GameObject implements Movable, TakeVisitor {
     @Override
     public void take(Key key) {
         System.out.println("Take the key ...");
+        game.key(1);
     }
 
     @Override
@@ -42,13 +42,13 @@ public class Player extends GameObject implements Movable, TakeVisitor {
 
     @Override
     public void take(BombRange bombRange) {
-        game.bombParameter.updateRange((bombRange.getBonus()?1:-1));
+        game.bombParameter().updateRange((bombRange.getBonus()?1:-1));
         System.out.println("Take the bomb range " + (bombRange.getBonus()?"increase":"decrease") + " ...");
     }
 
     @Override
     public void take(BombCount bombCount) {
-        game.bombParameter.updateCount((bombCount.getBonus()?1:-1));
+        game.bombParameter().updateCount((bombCount.getBonus()?1:-1));
         System.out.println("Take the bomb count " + (bombCount.getBonus()?"increase":"decrease") + " ...");
     }
 

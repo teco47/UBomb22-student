@@ -14,7 +14,9 @@ public class Game {
     private final Player player;
     private final Princess princess;
     final private List<Monster> monsters;
-    public BombParameter bombParameter;
+    private BombParameter bombParameter;
+
+    private int key=0;
 
     private final Grid grid;
     private boolean onPrincess;
@@ -90,6 +92,7 @@ public class Game {
     public Player player() {
         return this.player;
     }
+    public BombParameter bombParameter(){return this.bombParameter;}
 
     public Princess princess(){ return this.princess;}
     public List<Monster> monster(){ return this.monsters;}
@@ -101,5 +104,7 @@ public class Game {
     public void setOnPrincess(boolean on){
         onPrincess = on;
     }
+    public int key(){return key;}
+    public void key(int i){ key+=i;}
     public boolean getOnPrincess() { return onPrincess;}
 }
