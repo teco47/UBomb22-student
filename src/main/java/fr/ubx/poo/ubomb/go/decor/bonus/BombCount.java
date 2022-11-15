@@ -21,7 +21,7 @@ public class BombCount extends Bonus {
     public boolean getBonus(){return increase; }
 
     @Override
-    public void explode() {}//??
+    public void explode() {}
 
     @Override
     public void takenBy(Player player) {player.take(this); }

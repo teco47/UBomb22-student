@@ -15,7 +15,10 @@ public class Game {
     private final World world;
     private final Player player;
     private final Princess princess;
-    private List<Monster> monsters;
+    final private List<Monster> monsters;
+    private BombParameter bombParameter;
+
+    private int key=0;
 
     private final Grid grid;
     private boolean onPrincess;
@@ -28,6 +31,8 @@ public class Game {
     public Game(Configuration configuration, World world, Grid grid) {
         this.configuration = configuration;
         this.world = world;
+        bombParameter = new BombParameter(this.configuration().bombBagCapacity());
+
         this.grid = grid;
         player = new Player(this, configuration.playerPosition());
         monsters = new ArrayList<>();
@@ -54,6 +59,9 @@ public class Game {
             listTimer.add(new Timer(configuration.monsterVelocity()*(int)(500* rand.nextDouble(0.75,1.25))));
             nameTimer.put("Monster Velocity Timer "+m,nbTimer++);
         }
+
+        listTimer.add(new Timer(1000));
+        nameTimer.put("bomb step",nbTimer++);
     }
 
     public Configuration configuration() {
@@ -77,6 +85,10 @@ public class Game {
         return gos;
     }
 
+    public void removeBonus(Position position){
+        grid.remove(position);
+    }
+
     public Grid grid() {
         return grid;
     }
@@ -84,6 +96,7 @@ public class Game {
     public Player player() {
         return this.player;
     }
+    public BombParameter bombParameter(){return this.bombParameter;}
 
     public Princess princess(){ return this.princess;}
     public List<Monster> monster(){ return this.monsters;}
@@ -92,9 +105,10 @@ public class Game {
     public int nameTimer(String name){
         return nameTimer.get(name);
     }
-
     public void setOnPrincess(boolean on){
         onPrincess = on;
     }
+    public int key(){return key;}
+    public void key(int i){ key+=i;}
     public boolean getOnPrincess() { return onPrincess;}
 }
