@@ -19,25 +19,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Monster extends GameObject implements Movable, TakeVisitor {
+public class Monster extends Character{
 
-    private Direction direction;
-    private boolean moveRequested = false;
-    private final int lives;
-    private final int numMonster;
+    private boolean isMoving = false;
 
-    public Monster(Game game, Position position, int numMonster) {
-        super(game, position);
-        this.direction = Direction.DOWN;
-        this.lives = 1;
-        this.numMonster = numMonster;
+    public Monster(Game game, Position position, int lives) {
+        super(game, position,lives);
     }
 
 
-    @Override
+    /*@Override
     public void take(Key key) {
         System.out.println("Take the key ...");
-    }
+    }*/
+
 
     public void doMove(Direction direction) {
         // This method is called only if the move is possible, do not check again
@@ -50,26 +45,13 @@ public class Monster extends GameObject implements Movable, TakeVisitor {
             }
         }
         setPosition(nextPos);
-        game.getListTimer().get(game.nameTimer("Monster Velocity Timer "+numMonster)).start();
+        isMoving = true;
+        Random rand = new Random();
+        game.addTimer(game.configuration().monsterVelocity()*(int)(500* rand.nextDouble(0.75,1.25)),this, "Monster Velocity");
+        //game.getListTimer().get(game.nameTimer("Monster Velocity Timer "+numMonster)).start();
     }
 
-
-    public int getLives() {
-        return lives;
-    }
-
-    public Direction getDirection() {
-        return direction;
-    }
-
-    public void requestMove(Direction direction) {
-        if (direction != this.direction) {
-            this.direction = direction;
-            setModified(true);
-        }
-        moveRequested = true;
-    }
-
+    @Override
     public final boolean canMove(Direction direction) {
         boolean walk =true;
         if(game.grid().get(direction.nextPosition(getPosition()))!=null){
@@ -88,32 +70,43 @@ public class Monster extends GameObject implements Movable, TakeVisitor {
         return walk && game.grid().inside(direction.nextPosition(getPosition()));
     }
 
+    @Override
     public void update(long now) {
-        if (moveRequested) {
-            if (canMove(direction)) {
-                doMove(direction);
-            }
+        super.update(now);
+    }
+
+    @Override
+    public void trigger(String flag) {
+        switch (flag){
+            case "Monster Velocity":
+                isMoving=false;
+                break;
+            case "Monster Invisibility":
+                setInvisibility(false);
+                break;
         }
-        moveRequested = false;
     }
 
     public void moveMonster(){
-        Random rand = new Random();
-        int direction = rand.nextInt(4);
-        switch (direction){
-            case 0:
-                requestMove(Direction.UP);
-                break;
-            case 1:
-                requestMove(Direction.DOWN);
-                break;
-            case 2:
-                requestMove(Direction.LEFT);
-                break;
-            case 3:
-                requestMove(Direction.RIGHT);
-                break;
+        if(!isMoving){
+            Random rand = new Random();
+            int direction = rand.nextInt(4);
+            switch (direction){
+                case 0:
+                    requestMove(Direction.UP);
+                    break;
+                case 1:
+                    requestMove(Direction.DOWN);
+                    break;
+                case 2:
+                    requestMove(Direction.LEFT);
+                    break;
+                case 3:
+                    requestMove(Direction.RIGHT);
+                    break;
+            }
         }
+
 
     }
 

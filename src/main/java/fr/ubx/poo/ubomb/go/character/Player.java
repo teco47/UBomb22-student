@@ -4,6 +4,7 @@
 
 package fr.ubx.poo.ubomb.go.character;
 
+import fr.ubx.poo.ubomb.engine.Timer;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
@@ -16,15 +17,12 @@ import fr.ubx.poo.ubomb.go.decor.bonus.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player extends GameObject implements Movable, TakeVisitor {
-    private Direction direction;
-    private boolean moveRequested = false;
-    private int lives;
+public class Player extends Character{
+
+
 
     public Player(Game game, Position position) {
-        super(game, position);
-        this.direction = Direction.DOWN;
-        this.lives = game.configuration().playerLives();
+        super(game, position, game.configuration().playerLives());
     }
 
 
@@ -36,7 +34,7 @@ public class Player extends GameObject implements Movable, TakeVisitor {
 
     @Override
     public void take(Heart heart) {
-        lives++;
+        updateLives(1);
         System.out.println("Take the heart ...");
     }
 
@@ -52,19 +50,19 @@ public class Player extends GameObject implements Movable, TakeVisitor {
         System.out.println("Take the bomb count " + (bombCount.getBonus()?"increase":"decrease") + " ...");
     }
 
+    @Override
     public void doMove(Direction direction) {
         // This method is called only if the move is possible, do not check again
         Position nextPos = direction.nextPosition(getPosition());
-        List<GameObject> next = new ArrayList<>();
+        List<GameObject> next = game.getGameObjects(nextPos);
         next.add(game.grid().get(nextPos));
-        if (next.get(0) instanceof Bonus bonus) {
-            bonus.takenBy(this);
-            bonus.remove();
-        }
-        next = game.getGameObjects(nextPos);
         for (GameObject go : next) {
-            if (go instanceof Monster){
+            if (go instanceof Bonus bonus) {
+                bonus.takenBy(this);
+                bonus.remove();
+            } else if (go instanceof Monster){
                 updateLives(-1);
+                break;
             } else if(go instanceof Princess){
                 game.setOnPrincess(true);
             }
@@ -72,29 +70,16 @@ public class Player extends GameObject implements Movable, TakeVisitor {
         setPosition(nextPos);
     }
 
-
-    public int getLives() {
-        return lives;
-    }
-
     public void updateLives(int change){
-        if(!game.getListTimer().get(game.nameTimer("Player Invisibility")).isRunning()){
-            lives += change;
-            game.getListTimer().get(game.nameTimer("Player Invisibility")).start();
-            System.out.println("Vous avez reçu "+change+" vies");
+        if(change > 0){
+            super.setLives(getLives()+change);
+        } else {
+            if(!getIsInvisibility()){
+                setLives(getLives()+change);
+                setInvisibility(true);
+                game.addTimer(game.configuration().playerInvisibilityTime(),this,"Player Invisibility");
+            }
         }
-    }
-
-    public Direction getDirection() {
-        return direction;
-    }
-
-    public void requestMove(Direction direction) {
-        if (direction != this.direction) {
-            this.direction = direction;
-            setModified(true);
-        }
-        moveRequested = true;
     }
 
     public final boolean canMove(Direction direction) {
@@ -108,12 +93,17 @@ public class Player extends GameObject implements Movable, TakeVisitor {
     }
 
     public void update(long now) {
-        if (moveRequested) {
-            if (canMove(direction)) {
-                doMove(direction);
-            }
+        super.update(now);
+    }
+
+    @Override
+    public void trigger(String flag) {
+        switch (flag){
+            case "Player Invisibility":
+                setInvisibility(false);
+                break;
+            default:
         }
-        moveRequested = false;
     }
 
     @Override

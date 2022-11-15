@@ -2,6 +2,7 @@ package fr.ubx.poo.ubomb.game;
 
 import fr.ubx.poo.ubomb.engine.Timer;
 import fr.ubx.poo.ubomb.go.GameObject;
+import fr.ubx.poo.ubomb.go.character.Bomb;
 import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.character.Player;
 import fr.ubx.poo.ubomb.go.character.Princess;
@@ -23,10 +24,7 @@ public class Game {
     private final Grid grid;
     private boolean onPrincess;
 
-    // List of Timer
-    // 0 - Invisibility of Player
-    private final List<Timer> listTimer;
-    private final Map<String, Integer> nameTimer;
+    private final Set<Timer> timerSet;
 
     public Game(Configuration configuration, World world, Grid grid) {
         this.configuration = configuration;
@@ -43,25 +41,7 @@ public class Game {
             princess = new Princess(this, grid.getPrincess());
         } else { princess = null;}
         onPrincess = false;
-
-        listTimer = new ArrayList<>();
-        nameTimer = new HashMap<>();
-        instantiateTimer();
-    }
-
-    private void instantiateTimer(){
-        int nbTimer = 0;
-        listTimer.add(new Timer(configuration.playerInvisibilityTime()));
-        nameTimer.put("Player Invisibility",nbTimer++);
-
-        for(int m=0; m< monsters.size(); m++){
-            Random rand = new Random();
-            listTimer.add(new Timer(configuration.monsterVelocity()*(int)(500* rand.nextDouble(0.75,1.25))));
-            nameTimer.put("Monster Velocity Timer "+m,nbTimer++);
-        }
-
-        listTimer.add(new Timer(1000));
-        nameTimer.put("bomb step",nbTimer++);
+        timerSet = new HashSet<>();
     }
 
     public Configuration configuration() {
@@ -101,10 +81,13 @@ public class Game {
     public Princess princess(){ return this.princess;}
     public List<Monster> monster(){ return this.monsters;}
 
-    public List<Timer> getListTimer(){ return this.listTimer;}
-    public int nameTimer(String name){
-        return nameTimer.get(name);
+    public Set<Timer> getTimerSet(){return timerSet;}
+    public void addTimer(long duration, GameObject go, String name){
+        Timer t = new Timer(duration,go, name);
+        timerSet.add(t);
+        t.start();
     }
+
     public void setOnPrincess(boolean on){
         onPrincess = on;
     }
