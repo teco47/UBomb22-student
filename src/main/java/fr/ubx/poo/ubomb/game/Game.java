@@ -5,12 +5,14 @@ import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.character.Player;
 import fr.ubx.poo.ubomb.go.character.Princess;
+import fr.ubx.poo.ubomb.launcher.World;
 
 import java.util.*;
 
 public class Game {
 
     private final Configuration configuration;
+    private final World world;
     private final Player player;
     private final Princess princess;
     private List<Monster> monsters;
@@ -23,8 +25,9 @@ public class Game {
     private final List<Timer> listTimer;
     private final Map<String, Integer> nameTimer;
 
-    public Game(Configuration configuration, Grid grid) {
+    public Game(Configuration configuration, World world, Grid grid) {
         this.configuration = configuration;
+        this.world = world;
         this.grid = grid;
         player = new Player(this, configuration.playerPosition());
         monsters = new ArrayList<>();
