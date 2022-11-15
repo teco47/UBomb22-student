@@ -49,4 +49,6 @@ public abstract class GameObject implements Walkable {
 
     public void explode() {
     }
+
+    public void trigger(String flag){ return;}
 }

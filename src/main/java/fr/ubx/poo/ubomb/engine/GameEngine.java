@@ -103,16 +103,20 @@ public final class GameEngine {
                 checkCollision(now);
                 checkExplosions();
 
-                for(int m=0; m< monsters.size(); m++){
-                    if(!game.getListTimer().get(game.nameTimer("Monster Velocity Timer "+m)).isRunning()){
-                        monsters.get(m).moveMonster();
-                    }
+                for (Monster m: monsters) {
+                    m.moveMonster();
                 }
 
                 //do Timer
-                for (Timer t : game.getListTimer()){
+                Iterator i = game.getTimerSet().iterator();
+                Timer t = null;
+                while (i.hasNext()){
+                    t = (Timer) i.next();
                     if(t.isRunning()){
                         t.update(System.nanoTime());
+                    } else {
+                        t.trigger();
+                        i.remove();
                     }
                 }
 
@@ -201,10 +205,6 @@ public final class GameEngine {
         if (game.getOnPrincess()) {
             gameLoop.stop();
             showMessage("Victoire", Color.RED);
-        }
-
-        if(game.getListTimer().get(game.nameTimer("bomb step")).isRunning()){
-            bomb.get(0).updateCountdow(-1);
         }
     }
 

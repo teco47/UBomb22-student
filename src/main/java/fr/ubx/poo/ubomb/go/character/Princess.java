@@ -19,11 +19,6 @@ public class Princess extends GameObject implements TakeVisitor {
         super(game, position);
     }
 
-    public final boolean canMove(Direction direction) {
-        // Need to be updated ;-)
-        return true;
-    }
-
     @Override
     public void explode() {
         // TODO
