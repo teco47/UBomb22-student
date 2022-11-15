@@ -1,7 +1,7 @@
 package fr.ubx.poo.ubomb.launcher;
 
 import fr.ubx.poo.ubomb.game.Configuration;
-<<<<<<< HEAD
+
 import fr.ubx.poo.ubomb.game.Position;
 
 import java.io.*;
@@ -14,20 +14,10 @@ public class World {
 
     private int nbLevel;
     private List<String> levels;
-=======
-
-import java.util.List;
-
-public class World {
-
-    private final int nbLevel;
-    private final List<String> levels;
->>>>>>> origin/World
     private int playerLevel;
 
     private Configuration config;
 
-<<<<<<< HEAD
 
     /*public World(int nbLevel, List<String> levels, Configuration config) {
         this.nbLevel = nbLevel;
@@ -85,7 +75,4 @@ public class World {
     public int getPlayerLevel() {
         return playerLevel;
     }
-=======
-    public
->>>>>>> origin/World
 }
