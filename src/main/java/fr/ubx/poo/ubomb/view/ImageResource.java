@@ -7,13 +7,15 @@ public enum ImageResource {
     // Only for the editor
     GROUND("ground.png"),
 
-    STONE("stone.png"),
+    //STONE("stone.png"),
+    STONE("stone-Re.png"),
     TREE("tree.png"),
     DOOR_OPENED("door_opened.png"),
     DOOR_CLOSED("door_closed.png"),
 
     // Bonus
-    HEART("heart.png"),
+    //HEART("heart.png"),
+    HEART("heart-Re.png"),
     KEY("key.png"),
 
     BONUS_BOMB_NB_INC("bonus_bomb_nb_inc.png"),
@@ -21,7 +23,8 @@ public enum ImageResource {
     BONUS_BOMB_RANGE_INC("bonus_bomb_range_inc.png"),
     BONUS_BOMB_RANGE_DEC("bonus_bomb_range_dec.png"),
 
-    BOX("box.png"),
+    //BOX("box.png"),
+    BOX("box-Re.png"),
 
     // Player, princess and monsters
     PLAYER_UP("player_up.png"),
@@ -34,7 +37,8 @@ public enum ImageResource {
     MONSTER_DOWN("monster_down.png"),
     MONSTER_LEFT("monster_left.png"),
 
-    PRINCESS("princess.png"),
+    //PRINCESS("princess.png"),
+    PRINCESS("princess-Re.png"),
 
     // Bombs
     BOMB_0("bomb_0.png"),

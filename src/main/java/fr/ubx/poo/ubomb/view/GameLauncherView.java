@@ -4,6 +4,7 @@ import fr.ubx.poo.ubomb.engine.GameEngine;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.launcher.GameLauncher;
 import fr.ubx.poo.ubomb.launcher.MapLevel;
+import fr.ubx.poo.ubomb.launcher.World;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
@@ -13,6 +14,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.util.Properties;
+
+import static javafx.beans.property.IntegerProperty.integerProperty;
 
 public class GameLauncherView extends BorderPane {
 
@@ -46,7 +50,7 @@ public class GameLauncherView extends BorderPane {
         loadItem.setOnAction(e -> {
             File file = fileChooser.showOpenDialog(stage);
             if (file != null) {
-                // TODO
+                World world = new World(file);
                 System.err.println("[TODO] Not implemented");
             }
         });
