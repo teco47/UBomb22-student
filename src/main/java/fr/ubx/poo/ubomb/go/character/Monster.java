@@ -4,16 +4,11 @@
 
 package fr.ubx.poo.ubomb.go.character;
 
-import fr.ubx.poo.ubomb.engine.Timer;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
-import fr.ubx.poo.ubomb.go.Movable;
-import fr.ubx.poo.ubomb.go.TakeVisitor;
 import fr.ubx.poo.ubomb.go.decor.Decor;
-import fr.ubx.poo.ubomb.go.decor.bonus.Bonus;
-import fr.ubx.poo.ubomb.go.decor.bonus.Key;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,18 +16,11 @@ import java.util.Random;
 
 public class Monster extends Character{
 
-    private boolean isMoving = false;
+    private boolean triggerMoving = false;
 
     public Monster(Game game, Position position, int lives) {
         super(game, position,lives);
     }
-
-
-    /*@Override
-    public void take(Key key) {
-        System.out.println("Take the key ...");
-    }*/
-
 
     public void doMove(Direction direction) {
         // This method is called only if the move is possible, do not check again
@@ -45,15 +33,14 @@ public class Monster extends Character{
             }
         }
         setPosition(nextPos);
-        isMoving = true;
+        triggerMoving = false;
         Random rand = new Random();
         game.addTimer(game.configuration().monsterVelocity()*(int)(500* rand.nextDouble(0.75,1.25)),this, "Monster Velocity");
-        //game.getListTimer().get(game.nameTimer("Monster Velocity Timer "+numMonster)).start();
     }
 
     @Override
     public final boolean canMove(Direction direction) {
-        boolean walk =true;
+        boolean walk = true;
         if(game.grid().get(direction.nextPosition(getPosition()))!=null){
             Decor decor = game.grid().get(direction.nextPosition(getPosition()));
             walk = decor.walkableBy(this);
@@ -79,7 +66,7 @@ public class Monster extends Character{
     public void trigger(String flag) {
         switch (flag){
             case "Monster Velocity":
-                isMoving=false;
+                triggerMoving =true;
                 break;
             case "Monster Invisibility":
                 setInvisibility(false);
@@ -88,7 +75,7 @@ public class Monster extends Character{
     }
 
     public void moveMonster(){
-        if(!isMoving){
+        if(triggerMoving){
             Random rand = new Random();
             int direction = rand.nextInt(4);
             switch (direction){
@@ -106,8 +93,6 @@ public class Monster extends Character{
                     break;
             }
         }
-
-
     }
 
     @Override

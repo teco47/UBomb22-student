@@ -7,6 +7,7 @@ import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.character.Player;
 import fr.ubx.poo.ubomb.go.character.Princess;
 import fr.ubx.poo.ubomb.launcher.World;
+import javafx.geometry.Pos;
 
 import java.util.*;
 
@@ -16,9 +17,9 @@ public class Game {
     private final World world;
     private final Player player;
     private final Princess princess;
-    final private List<Monster> monsters;
+    final private Set<Monster> monsters;
     private BombParameter bombParameter;
-
+    final private Set<Position> addBombs;
     private int key=0;
 
     private final Grid grid;
@@ -29,13 +30,15 @@ public class Game {
     public Game(Configuration configuration, World world, Grid grid) {
         this.configuration = configuration;
         this.world = world;
+
         bombParameter = new BombParameter(this.configuration().bombBagCapacity());
+        addBombs = new HashSet<>();
 
         this.grid = grid;
         player = new Player(this, configuration.playerPosition());
-        monsters = new ArrayList<>();
+        monsters = new HashSet<>();
         for(Position pos : grid().monstersSet()){
-            monsters.add(new Monster(this,pos,monsters.size()));
+            monsters.add(new Monster(this,pos,1));
         }
         if(grid.getPrincess() != null){
             princess = new Princess(this, grid.getPrincess());
@@ -77,11 +80,11 @@ public class Game {
         return this.player;
     }
     public BombParameter bombParameter(){return this.bombParameter;}
-
+    public Set<Position> addBombs(){ return this.addBombs;}
     public Princess princess(){ return this.princess;}
-    public List<Monster> monster(){ return this.monsters;}
+    public Set<Monster> monster(){ return this.monsters;}
 
-    public Set<Timer> getTimerSet(){return timerSet;}
+    public Set<Timer> timerSet(){return this.timerSet;}
     public void addTimer(long duration, GameObject go, String name){
         Timer t = new Timer(duration,go, name);
         timerSet.add(t);

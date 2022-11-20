@@ -36,9 +36,9 @@ public final class GameEngine {
     private final Game game;
     private final Player player;
     private final Princess princess;
-    private final List<Monster> monsters;
-
-    private final List<Bomb> bomb;
+    private final Set<Monster> monsters;
+    private final Set<Bomb> bombs;
+    private final Set<Timer> timers;
     private final List<Sprite> sprites = new LinkedList<>();
     private final Set<Sprite> cleanUpSprites = new HashSet<>();
     private final Stage stage;
@@ -52,7 +52,8 @@ public final class GameEngine {
         this.player = game.player();
         this.princess = game.princess();
         this.monsters = game.monster();
-        this.bomb = new ArrayList<Bomb>();
+        this.bombs = new HashSet<>();
+        this.timers = game.timerSet();
         initialize();
         buildAndSetGameLoop();
     }
@@ -77,7 +78,7 @@ public final class GameEngine {
         root.getChildren().add(layer);
         statusBar = new StatusBar(root, sceneWidth, sceneHeight, game);
 
-        // Create decors
+        // Create decors sprite
         for (var decor : game.grid().values()) {
             sprites.add(SpriteFactory.create(layer, decor));
             decor.setModified(true);
@@ -86,7 +87,9 @@ public final class GameEngine {
         sprites.add(new SpritePlayer(layer, player));
         if(princess!=null){ sprites.add(new SpritePrincess(layer,princess)); }
 
+        Random rand = new Random();
         for(Monster m : monsters){
+            game.addTimer(game.configuration().monsterVelocity()*(int)(500* rand.nextDouble(0.75,1.25)),m, "Monster Velocity");
             sprites.add((new SpriteMonster(layer,m)));
         }
     }
@@ -107,18 +110,7 @@ public final class GameEngine {
                     m.moveMonster();
                 }
 
-                //do Timer
-                Iterator i = game.getTimerSet().iterator();
-                Timer t = null;
-                while (i.hasNext()){
-                    t = (Timer) i.next();
-                    if(t.isRunning()){
-                        t.update(System.nanoTime());
-                    } else {
-                        t.trigger();
-                        i.remove();
-                    }
-                }
+                checkTrigger();
 
                 // Graphic update
                 cleanupSprites();
@@ -126,6 +118,20 @@ public final class GameEngine {
                 statusBar.update(game);
             }
         };
+    }
+
+    private void checkTrigger() {
+        Iterator i = timers.iterator();
+        Timer t = null;
+        while (i.hasNext()){
+            t = (Timer) i.next();
+            if(t.isRunning()){
+                t.update(System.nanoTime());
+            } else {
+                t.trigger();
+                i.remove();
+            }
+        }
     }
 
     private void checkExplosions() {
@@ -147,8 +153,11 @@ public final class GameEngine {
     }
 
     private void createNewBombs(long now) {
-        // Create a new Bomb is needed
-        // sprites.add((new SpriteBomb(layer,new Bomb(game, game.player().getPosition()))));
+        for (Position pos : game.addBombs()){
+            Bomb bomb = new Bomb(game,player.getPosition());
+            bombs.add(bomb);
+            sprites.add(SpriteFactory.create(layer, bomb));
+        }
     }
 
     private void checkCollision(long now) {
