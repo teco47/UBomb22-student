@@ -19,7 +19,6 @@ public class Game {
     private final Princess princess;
     final private Set<Monster> monsters;
     private BombParameter bombParameter;
-    final private Set<Position> addBombs;
     private int key=0;
     private final Grid grid;
     private boolean onPrincess;
@@ -31,7 +30,6 @@ public class Game {
         this.world = world;
 
         bombParameter = new BombParameter(this.configuration().bombBagCapacity());
-        addBombs = new HashSet<>();
 
         this.grid = grid;
         player = new Player(this, configuration.playerPosition());
@@ -79,7 +77,6 @@ public class Game {
         return this.player;
     }
     public BombParameter bombParameter(){return this.bombParameter;}
-    public Set<Position> addBombs(){ return this.addBombs;}
     public Princess princess(){ return this.princess;}
     public Set<Monster> monster(){ return this.monsters;}
 

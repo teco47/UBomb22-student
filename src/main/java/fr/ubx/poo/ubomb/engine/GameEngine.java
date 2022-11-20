@@ -39,6 +39,7 @@ public final class GameEngine {
     private final Set<Monster> monsters;
     private final Set<Bomb> bombs;
     private final Set<Timer> timers;
+    private final Set<Timer> addTimers;
     private final List<Sprite> sprites = new LinkedList<>();
     private final Set<Sprite> cleanUpSprites = new HashSet<>();
     private final Stage stage;
@@ -53,7 +54,8 @@ public final class GameEngine {
         this.princess = game.princess();
         this.monsters = game.monster();
         this.bombs = new HashSet<>();
-        this.timers = game.timerSet();
+        this.timers = new HashSet<>();
+        this.addTimers = game.timerSet();
         initialize();
         buildAndSetGameLoop();
     }
@@ -102,7 +104,7 @@ public final class GameEngine {
 
                 // Do actions
                 update(now);
-                createNewBombs(now);
+                //createNewBombs(now);
                 checkCollision(now);
                 checkExplosions();
 
@@ -132,6 +134,10 @@ public final class GameEngine {
                 i.remove();
             }
         }
+        for(Timer newTimer : addTimers){
+            timers.add(newTimer);
+        }
+        addTimers.clear();
     }
 
     private void checkExplosions() {
@@ -152,12 +158,12 @@ public final class GameEngine {
         tt.play();
     }
 
-    private void createNewBombs(long now) {
-        for (Position pos : game.addBombs()){
-            Bomb bomb = new Bomb(game,player.getPosition());
-            bombs.add(bomb);
-            sprites.add(SpriteFactory.create(layer, bomb));
-        }
+    private void createNewBombs(/*long now*/) {
+        System.out.println("new bomb");
+        Bomb bomb = new Bomb(game,player.getPosition());
+        game.addTimer(game.configuration().bombStepTimer(),bomb, "tic-tac");
+        bombs.add(bomb);
+        sprites.add(SpriteFactory.create(layer, bomb));
     }
 
     private void checkCollision(long now) {
@@ -178,6 +184,8 @@ public final class GameEngine {
             player.requestMove(Direction.RIGHT);
         } else if (input.isMoveUp()) {
             player.requestMove(Direction.UP);
+        } else if (input.isBomb()) {
+            createNewBombs();
         }
         input.clear();
     }
