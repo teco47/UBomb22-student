@@ -21,7 +21,6 @@ public class Game {
     private BombParameter bombParameter;
     final private Set<Position> addBombs;
     private int key=0;
-
     private final Grid grid;
     private boolean onPrincess;
 
