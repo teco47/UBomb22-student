@@ -54,19 +54,16 @@ public final class SpriteFactory {
             return HEART.getImage();
         if (gameObject instanceof Bomb) {
             switch (((Bomb) gameObject).getCountdow()) {
-                case 4:
-                    System.out.println("BOMB_3");
-                    return BOMB_3.getImage();
                 case 3:
-                    System.out.println("BOMB_2");
-                    return BOMB_2.getImage();
+                    return BOMB_3.getImage();
                 case 2:
-                    System.out.println("BOMB_1");
-                    return BOMB_1.getImage();
+                    return BOMB_2.getImage();
                 case 1:
-                    System.out.println("BOMB_0");
+                    return BOMB_1.getImage();
+                case 0:
                     return  BOMB_0.getImage();
                 default:
+                    System.out.println("BOMB_0");
                     return  EXPLOSION.getImage();
             }
         }

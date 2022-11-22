@@ -18,12 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends Character{
-
-
-
     public Player(Game game, Position position) {
         super(game, position, game.configuration().playerLives());
     }
+
 
 
     @Override
@@ -62,7 +60,6 @@ public class Player extends Character{
                 bonus.remove();
             } else if (go instanceof Monster){
                 updateLives(-1);
-                break;
             } else if(go instanceof Princess){
                 game.setOnPrincess(true);
             }

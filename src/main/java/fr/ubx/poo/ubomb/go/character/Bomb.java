@@ -13,7 +13,7 @@ public class Bomb extends GameObject {
 
     public Bomb(Game game, Position position) {
         super(game, position);
-        countdown = 4;
+        countdown = 3;
     }
 
     public int getCountdow() {
@@ -30,7 +30,6 @@ public class Bomb extends GameObject {
             case "tic-tac":
                 if (countdown > 0){
                     countdown--;
-                    System.out.println(countdown);
                     setModified(true);
                     game.addTimer(game.configuration().bombStepTimer(),this, "tic-tac");
                 }else{

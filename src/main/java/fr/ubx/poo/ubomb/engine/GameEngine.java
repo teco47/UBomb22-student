@@ -160,10 +160,15 @@ public final class GameEngine {
 
     private void createNewBombs(/*long now*/) {
         System.out.println("new bomb");
-        Bomb bomb = new Bomb(game,player.getPosition());
-        game.addTimer(game.configuration().bombStepTimer(),bomb, "tic-tac");
-        bombs.add(bomb);
-        sprites.add(SpriteFactory.create(layer, bomb));
+        if(!bombs.stream().anyMatch(bb -> bb.getPosition()==player.getPosition())) {
+            Bomb bomb = new Bomb(game, player.getPosition());
+            game.addTimer(game.configuration().bombStepTimer(), bomb, "tic-tac");
+            bombs.add(bomb);
+            sprites.add(SpriteFactory.create(layer, bomb));
+            System.out.println(bombs.size());
+        }else{
+            System.out.println("bomb no placable");
+        }
     }
 
     private void checkCollision(long now) {
