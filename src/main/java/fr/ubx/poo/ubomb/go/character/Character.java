@@ -1,5 +1,6 @@
 package fr.ubx.poo.ubomb.go.character;
 
+import fr.ubx.poo.ubomb.engine.Timer;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
@@ -14,10 +15,13 @@ public abstract class Character extends GameObject  implements Movable, TakeVisi
     private int lives;
     private boolean isInvisibility = false;
 
-    public Character(Game game, Position position, int lives) {
+    private Timer timerInvisibility;
+
+    public Character(Game game, Position position, int lives, long invincibilityTime) {
         super(game, position);
         this.direction = Direction.DOWN;
         this.lives = lives;
+        this.timerInvisibility = new Timer(invincibilityTime);
     }
 
     public Character(Position position) {
@@ -31,6 +35,18 @@ public abstract class Character extends GameObject  implements Movable, TakeVisi
         this.lives = lives;
     }
 
+    public void updateLives(int change){
+        if(change > 0){
+            setLives(getLives()+change);
+        } else {
+            if(!getIsInvisibility()){
+                setLives(getLives()+change);
+                setIsInvisibility(true);
+                timerInvisibility.start();
+            }
+        }
+    }
+
     public Direction getDirection() {
         return direction;
     }
@@ -38,28 +54,24 @@ public abstract class Character extends GameObject  implements Movable, TakeVisi
     public boolean getIsInvisibility() {
         return isInvisibility;
     }
-
-    public void setInvisibility(boolean invisibility) {
-        isInvisibility = invisibility;
-    }
+    public void setIsInvisibility(boolean invincible) {isInvisibility=invincible;}
 
     public void requestMove(Direction direction) {
         if (direction != this.direction) {
             this.direction = direction;
             setModified(true);
         }
-        moveRequested = true;
+        if (canMove(direction)) {
+            doMove(direction);
+        }
     }
-
     public abstract void doMove(Direction direction);
     public abstract boolean canMove(Direction direction);
 
     public void update(long now) {
-        if (moveRequested) {
-            if (canMove(direction)) {
-                doMove(direction);
-            }
+        timerInvisibility.update(now);
+        if(isInvisibility && !timerInvisibility.isRunning()){
+            isInvisibility = false;
         }
-        moveRequested = false;
     }
 }

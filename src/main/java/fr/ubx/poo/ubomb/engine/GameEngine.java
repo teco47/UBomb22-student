@@ -89,9 +89,7 @@ public final class GameEngine {
         sprites.add(new SpritePlayer(layer, player));
         if(princess!=null){ sprites.add(new SpritePrincess(layer,princess)); }
 
-        Random rand = new Random();
         for(Monster m : monsters){
-            game.addTimer(game.configuration().monsterVelocity()*(int)(500* rand.nextDouble(0.75,1.25)),m, "Monster Velocity");
             sprites.add((new SpriteMonster(layer,m)));
         }
     }
@@ -108,10 +106,6 @@ public final class GameEngine {
                 checkCollision(now);
                 checkExplosions();
 
-                for (Monster m: monsters) {
-                    m.moveMonster();
-                }
-
                 checkTrigger();
 
                 // Graphic update
@@ -123,21 +117,6 @@ public final class GameEngine {
     }
 
     private void checkTrigger() {
-        Iterator i = timers.iterator();
-        Timer t = null;
-        while (i.hasNext()){
-            t = (Timer) i.next();
-            if(t.isRunning()){
-                t.update(System.nanoTime());
-            } else {
-                t.trigger();
-                i.remove();
-            }
-        }
-        for(Timer newTimer : addTimers){
-            timers.add(newTimer);
-        }
-        addTimers.clear();
     }
 
     private void checkExplosions() {
@@ -162,9 +141,8 @@ public final class GameEngine {
         System.out.println("new bomb");
         if(!bombs.stream().anyMatch(bb -> bb.getPosition()==player.getPosition())) {
             Bomb bomb = new Bomb(game, player.getPosition());
-            game.addTimer(game.configuration().bombStepTimer(), bomb, "tic-tac");
             bombs.add(bomb);
-            sprites.add(SpriteFactory.create(layer, bomb));
+            sprites.add(new SpriteBomb(layer,bomb));
             System.out.println(bombs.size());
         }else{
             System.out.println("bomb no placable");
@@ -218,6 +196,9 @@ public final class GameEngine {
         player.update(now);
         for (Monster m : monsters) {
             m.update(now);
+        }
+        for(Bomb b : bombs){
+            b.update(now);
         }
 
         if (player.getLives() == 0) {

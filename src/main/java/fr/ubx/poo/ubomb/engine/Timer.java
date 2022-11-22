@@ -4,10 +4,6 @@
 
 package fr.ubx.poo.ubomb.engine;
 
-import fr.ubx.poo.ubomb.game.Game;
-import fr.ubx.poo.ubomb.go.GameObject;
-import fr.ubx.poo.ubomb.go.character.Character;
-
 import java.io.Serializable;
 
 public class Timer {
@@ -17,15 +13,10 @@ public class Timer {
     private boolean requested = false;
     private long remaining;
 
-    private final GameObject go;
-    private final String flag;
-
     // Set a timer for a duration in ms
-    public Timer(long duration, GameObject go, String name) {
+    public Timer(long duration) {
         this.duration = duration;
         remaining = duration;
-        this.go = go;
-        flag = name;
     }
 
     public void update(long now) {
@@ -54,9 +45,5 @@ public class Timer {
 
     public boolean isRunning() {
         return running || requested;
-    }
-
-    public void trigger(){
-        go.trigger(flag);
     }
 }

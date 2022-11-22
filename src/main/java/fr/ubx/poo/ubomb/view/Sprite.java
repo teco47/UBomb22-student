@@ -36,7 +36,6 @@ public class Sprite {
     }
 
     public void updateImage() {
-        image = SpriteFactory.getImage(gameObject);
     }
 
     public Position getPosition() {

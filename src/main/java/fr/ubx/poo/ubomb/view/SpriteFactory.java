@@ -52,21 +52,6 @@ public final class SpriteFactory {
             return KEY.getImage();
         if (gameObject instanceof Heart)
             return HEART.getImage();
-        if (gameObject instanceof Bomb) {
-            switch (((Bomb) gameObject).getCountdow()) {
-                case 3:
-                    return BOMB_3.getImage();
-                case 2:
-                    return BOMB_2.getImage();
-                case 1:
-                    return BOMB_1.getImage();
-                case 0:
-                    return  BOMB_0.getImage();
-                default:
-                    System.out.println("BOMB_0");
-                    return  EXPLOSION.getImage();
-            }
-        }
         throw new RuntimeException("Unsupported sprite for decor " + gameObject);
     }
 }

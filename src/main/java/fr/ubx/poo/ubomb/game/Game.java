@@ -81,11 +81,11 @@ public class Game {
     public Set<Monster> monster(){ return this.monsters;}
 
     public Set<Timer> timerSet(){return this.timerSet;}
-    public void addTimer(long duration, GameObject go, String name){
+    /*public void addTimer(long duration, GameObject go, String name){
         Timer t = new Timer(duration,go, name);
         timerSet.add(t);
         t.start();
-    }
+    }*/
 
     public void setOnPrincess(boolean on){
         onPrincess = on;

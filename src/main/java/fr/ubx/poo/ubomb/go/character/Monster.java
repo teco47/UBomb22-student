@@ -4,6 +4,7 @@
 
 package fr.ubx.poo.ubomb.go.character;
 
+import fr.ubx.poo.ubomb.engine.Timer;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
@@ -16,26 +17,15 @@ import java.util.Random;
 
 public class Monster extends Character{
 
-    private boolean triggerMoving = false;
+    private boolean loopMove = false;
+    private Timer timerMove;
+
 
     public Monster(Game game, Position position, int lives) {
-        super(game, position,lives);
-    }
-
-    public void doMove(Direction direction) {
-        // This method is called only if the move is possible, do not check again
-        Position nextPos = direction.nextPosition(getPosition());
-        List<GameObject> next = new ArrayList<>();
-        next = game.getGameObjects(nextPos);
-        for (GameObject go : next) {
-            if (go instanceof Player player){
-                player.updateLives(-1);
-            }
-        }
-        setPosition(nextPos);
-        triggerMoving = false;
-        Random rand = new Random();
-        game.addTimer(game.configuration().monsterVelocity()*(int)(500* rand.nextDouble(0.75,1.25)),this, "Monster Velocity");
+        super(game, position,lives,game.configuration().monsterInvisibilityTime());
+        timerMove = new Timer(1000);
+        timerMove.start();
+        System.out.println(timerMove.isRunning());
     }
 
     @Override
@@ -57,25 +47,8 @@ public class Monster extends Character{
         return walk && game.grid().inside(direction.nextPosition(getPosition()));
     }
 
-    @Override
-    public void update(long now) {
-        super.update(now);
-    }
-
-    @Override
-    public void trigger(String flag) {
-        switch (flag){
-            case "Monster Velocity":
-                triggerMoving =true;
-                break;
-            case "Monster Invisibility":
-                setInvisibility(false);
-                break;
-        }
-    }
-
     public void moveMonster(){
-        if(triggerMoving){
+        if(loopMove){
             Random rand = new Random();
             int direction = rand.nextInt(4);
             switch (direction){
@@ -93,6 +66,35 @@ public class Monster extends Character{
                     break;
             }
         }
+    }
+
+    public void doMove(Direction direction) {
+        // This method is called only if the move is possible, do not check again
+        Position nextPos = direction.nextPosition(getPosition());
+        List<GameObject> next = new ArrayList<>();
+        next = game.getGameObjects(nextPos);
+        for (GameObject go : next) {
+            if (go instanceof Player player){
+                player.updateLives(-1);
+            }
+        }
+        setPosition(nextPos);
+        loopMove = false;
+        timerMove.start();
+    }
+
+    @Override
+    public void update(long now) {
+        super.update(now);
+        timerMove.update(now);//update all timer
+        if(!timerMove.isRunning()){
+            loopMove =true;
+        }
+        moveMonster();
+    }
+
+    @Override
+    public void trigger(String flag) {
     }
 
     @Override
