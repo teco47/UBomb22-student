@@ -12,6 +12,7 @@ import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.Movable;
 import fr.ubx.poo.ubomb.go.TakeVisitor;
 import fr.ubx.poo.ubomb.go.decor.Decor;
+import fr.ubx.poo.ubomb.go.decor.Door;
 import fr.ubx.poo.ubomb.go.decor.bonus.*;
 
 import java.util.ArrayList;
@@ -19,12 +20,9 @@ import java.util.List;
 
 public class Player extends Character{
 
-
-
     public Player(Game game, Position position) {
         super(game, position, game.configuration().playerLives());
     }
-
 
     @Override
     public void take(Key key) {
@@ -60,9 +58,10 @@ public class Player extends Character{
             if (go instanceof Bonus bonus) {
                 bonus.takenBy(this);
                 bonus.remove();
+            } else if (go instanceof Door){
+                ((Door) go).travel(this.game);
             } else if (go instanceof Monster){
                 updateLives(-1);
-                break;
             } else if(go instanceof Princess){
                 game.setOnPrincess(true);
             }

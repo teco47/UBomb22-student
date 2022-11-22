@@ -12,8 +12,13 @@ public class GameLauncher {
         return new Game(configuration, null, new Level(new MapLevelDefault()));
     }
 
-    /*public static Game load(World world){
-        return new Game(world.getConfig(), this, new Level());
-    }*/
+    public static Game load(World world){
+        MapLevelFactory firstMap = new MapLevelFactory(world.getLevel(0));
+        return new Game(
+                world.getConfig(),
+                world,
+                new Level(firstMap.getMap())
+        );
+    }
 
 }

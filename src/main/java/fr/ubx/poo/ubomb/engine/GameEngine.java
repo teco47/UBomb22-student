@@ -34,9 +34,9 @@ public final class GameEngine {
 
     private static AnimationTimer gameLoop;
     private final Game game;
-    private final Player player;
-    private final Princess princess;
-    private final List<Monster> monsters;
+    private  Player player;
+    private  Princess princess;
+    private  List<Monster> monsters;
 
     private final List<Bomb> bomb;
     private final List<Sprite> sprites = new LinkedList<>();
@@ -90,40 +90,55 @@ public final class GameEngine {
             sprites.add((new SpriteMonster(layer,m)));
         }
     }
+    void clear(){
+        gameLoop.stop();
+        cleanupSprites();
+        sprites.clear();
+        player = game.player();
+        monsters = game.monster();
+        princess = game.princess();
+    }
 
     void buildAndSetGameLoop() {
         gameLoop = new AnimationTimer() {
             public void handle(long now) {
-                // Check keyboard actions
-                processInput(now);
+                if(game.isOnTravel()){
+                    clear();
+                    initialize();
+                    game.endTravel();
+                    gameLoop.start();
+                } else {
+                    // Check keyboard actions
+                    processInput(now);
 
-                // Do actions
-                update(now);
-                createNewBombs(now);
-                checkCollision(now);
-                checkExplosions();
+                    // Do actions
+                    update(now);
+                    createNewBombs(now);
+                    checkCollision(now);
+                    checkExplosions();
 
-                for (Monster m: monsters) {
-                    m.moveMonster();
-                }
-
-                //do Timer
-                Iterator i = game.getTimerSet().iterator();
-                Timer t = null;
-                while (i.hasNext()){
-                    t = (Timer) i.next();
-                    if(t.isRunning()){
-                        t.update(System.nanoTime());
-                    } else {
-                        t.trigger();
-                        i.remove();
+                    for (Monster m: monsters) {
+                        m.moveMonster();
                     }
-                }
 
-                // Graphic update
-                cleanupSprites();
-                render();
-                statusBar.update(game);
+                    //do Timer
+                    Iterator i = game.getTimerSet().iterator();
+                    Timer t = null;
+                    while (i.hasNext()){
+                        t = (Timer) i.next();
+                        if(t.isRunning()){
+                            t.update(System.nanoTime());
+                        } else {
+                            t.trigger();
+                            i.remove();
+                        }
+                    }
+
+                    // Graphic update
+                    cleanupSprites();
+                    render();
+                    statusBar.update(game);
+                }
             }
         };
     }
