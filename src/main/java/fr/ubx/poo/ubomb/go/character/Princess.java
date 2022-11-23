@@ -20,7 +20,7 @@ public class Princess extends GameObject implements TakeVisitor {
     }
 
     @Override
-    public void explode() {
-        // TODO
+    public boolean explode() {
+        return false;
     }
 }

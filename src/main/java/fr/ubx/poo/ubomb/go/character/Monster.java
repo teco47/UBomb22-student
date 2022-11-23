@@ -11,9 +11,8 @@ import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.decor.Decor;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class Monster extends Character{
 
@@ -35,11 +34,11 @@ public class Monster extends Character{
             Decor decor = game.grid().get(direction.nextPosition(getPosition()));
             walk = decor.walkableBy(this);
         } else {
-            List<GameObject> next;
+
             Position nextPos = direction.nextPosition(getPosition());
-            next = game.getGameObjects(nextPos);
+            Set<GameObject> next = game.getGameObjects(nextPos);
             for (GameObject go : next) {
-                if (go instanceof Princess p){
+                if (go instanceof Princess ){
                     walk = false;
                 }
             }
@@ -71,8 +70,7 @@ public class Monster extends Character{
     public void doMove(Direction direction) {
         // This method is called only if the move is possible, do not check again
         Position nextPos = direction.nextPosition(getPosition());
-        List<GameObject> next = new ArrayList<>();
-        next = game.getGameObjects(nextPos);
+        Set<GameObject> next = game.getGameObjects(nextPos);
         for (GameObject go : next) {
             if (go instanceof Player player){
                 player.updateLives(-1);
@@ -95,10 +93,5 @@ public class Monster extends Character{
 
     @Override
     public void trigger(String flag) {
-    }
-
-    @Override
-    public void explode() {
-        // TODO
     }
 }

@@ -7,10 +7,12 @@ package fr.ubx.poo.ubomb.engine;
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
+import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.character.Bomb;
 import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.character.Player;
 import fr.ubx.poo.ubomb.go.character.Princess;
+import fr.ubx.poo.ubomb.go.decor.Decor;
 import fr.ubx.poo.ubomb.view.*;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
@@ -53,7 +55,7 @@ public final class GameEngine {
         this.player = game.player();
         this.princess = game.princess();
         this.monsters = game.monster();
-        this.bombs = new HashSet<>();
+        this.bombs = game.bombs();
         this.timers = new HashSet<>();
         this.addTimers = game.timerSet();
         initialize();
@@ -138,20 +140,17 @@ public final class GameEngine {
     }
 
     private void createNewBombs(/*long now*/) {
-        System.out.println("new bomb");
-        if(!bombs.stream().anyMatch(bb -> bb.getPosition()==player.getPosition())) {
-            Bomb bomb = new Bomb(game, player.getPosition());
+        if( !bombs.stream().anyMatch(bb -> bb.getPosition()==player.getPosition())  &&
+        game.bombParameter().retrieveBomb(-1)) {
+            Bomb bomb = new Bomb(game, player.getPosition(),game.bombParameter().getRange());
             bombs.add(bomb);
             sprites.add(new SpriteBomb(layer,bomb));
-            System.out.println(bombs.size());
         }else{
-            System.out.println("bomb no placable");
         }
     }
 
     private void checkCollision(long now) {
         // Check a collision between a monster and the player
-
     }
 
     private void processInput(long now) {
@@ -191,16 +190,53 @@ public final class GameEngine {
         }.start();
     }
 
+    private int damage(Position src , Direction direction, int range ){
+        boolean blocked= false;
+        int i=0;
+        while (!blocked && i<range){
+            i++;
+            Set<GameObject> list  = game.getGameObjects(direction.nextPosition(src,i));
+            list.add(game.grid().get(direction.nextPosition(src,i)));
+            list.remove(null);
+            for(GameObject iter : list){
+                if (iter.explode()){
+                    blocked = true;
+                }
+            }
+        }
+        return i;
+    }
 
+    private void explosion (Bomb bomb){
+        animateExplosion(bomb.getPosition(),Direction.DOWN.nextPosition(bomb.getPosition(),damage(bomb.getPosition(),Direction.DOWN,bomb.getRange())));
+        animateExplosion(bomb.getPosition(),Direction.UP.nextPosition(bomb.getPosition(),damage(bomb.getPosition(),Direction.UP,bomb.getRange())));
+        animateExplosion(bomb.getPosition(),Direction.RIGHT.nextPosition(bomb.getPosition(),damage(bomb.getPosition(),Direction.RIGHT,bomb.getRange())));
+        animateExplosion(bomb.getPosition(),Direction.LEFT.nextPosition(bomb.getPosition(),damage(bomb.getPosition(),Direction.LEFT,bomb.getRange())));
+
+
+
+        game.bombParameter().retrieveBomb(1);
+    }
     private void update(long now) {
         player.update(now);
-        for (Monster m : monsters) {
-            m.update(now);
-        }
-        for(Bomb b : bombs){
-            b.update(now);
+
+        Iterator monsterIt = monsters.iterator();
+        while (monsterIt.hasNext()){
+            Monster m = (Monster) monsterIt.next();
+            if(m.isDeleted()){monsterIt.remove();}
+            else{m.update(now);}
         }
 
+        Iterator bombIt = bombs.iterator();
+        while (bombIt.hasNext()){
+            Bomb b = (Bomb) bombIt.next();
+            if(b.isDeleted()){
+                explosion(b);
+                bombIt.remove();
+            }else{
+                b.update(now);
+            }
+        }
         if (player.getLives() == 0) {
             gameLoop.stop();
             showMessage("Perdu!", Color.RED);

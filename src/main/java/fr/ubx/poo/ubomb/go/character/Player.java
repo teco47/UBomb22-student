@@ -16,6 +16,7 @@ import fr.ubx.poo.ubomb.go.decor.bonus.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class Player extends Character{
     public Player(Game game, Position position) {
@@ -49,7 +50,7 @@ public class Player extends Character{
     public void doMove(Direction direction) {
         // This method is called only if the move is possible, do not check again
         Position nextPos = direction.nextPosition(getPosition());
-        List<GameObject> next = game.getGameObjects(nextPos);
+        Set<GameObject> next = game.getGameObjects(nextPos);
         next.add(game.grid().get(nextPos));
         for (GameObject go : next) {
             if (go instanceof Bonus bonus) {
@@ -76,20 +77,5 @@ public class Player extends Character{
 
     public void update(long now) {
         super.update(now);
-    }
-
-    @Override
-    public void trigger(String flag) {
-        /*switch (flag){
-            case "Player Invisibility":
-                setInvisibility(false);
-                break;
-            default:
-        }*/
-    }
-
-    @Override
-    public void explode() {
-        // TODO
     }
 }

@@ -74,4 +74,10 @@ public abstract class Character extends GameObject  implements Movable, TakeVisi
             isInvisibility = false;
         }
     }
+
+    @Override
+    public boolean explode() {
+        updateLives(-1);
+        return false;
+    }
 }

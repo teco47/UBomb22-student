@@ -20,8 +20,6 @@ public class BombRange extends Bonus {
 
     public boolean getBonus(){return increase; }
 
-    @Override
-    public void explode() {}//??
 
     @Override
     public void takenBy(Player player) {player.take(this); }

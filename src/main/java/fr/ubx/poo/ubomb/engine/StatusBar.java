@@ -74,7 +74,7 @@ public class StatusBar {
         Player player = game.player();
         lives.setText(Integer.toString(game.player().getLives()));
         bombRange.setText(Integer.toString(game.bombParameter().getRange()));
-        availableBombs.setText(Integer.toString(game.bombParameter().getCount()));
+        availableBombs.setText(Integer.toString(game.bombParameter().getCurrentCount()));
         keys.setText(Integer.toString(game.key()));
     }
 }

@@ -7,7 +7,7 @@ public class BombParameter {
         this.maxCount = this.currentCount = count;
         range = 1;
     }
-    public int getCount() {
+    public int getCurrentCount() {
         return currentCount;
     }
 
@@ -27,11 +27,15 @@ public class BombParameter {
             }
         }
     }
-    public void retrieveBomb(int count) {
+    public boolean retrieveBomb(int count) {
+        if(currentCount+count < 0){
+            return false;
+        }
         currentCount+=count;
         if (currentCount > maxCount){
             currentCount = maxCount;
         }
+        return true;
     }
 
 
