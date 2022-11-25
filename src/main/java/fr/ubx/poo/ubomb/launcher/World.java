@@ -5,6 +5,7 @@ import fr.ubx.poo.ubomb.game.Configuration;
 import fr.ubx.poo.ubomb.game.Position;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -14,17 +15,9 @@ public class World {
 
     private int nbLevel;
     private List<String> levels;
-    private int playerLevel;
+    private int playerLevel = 0;
 
     private Configuration config;
-
-
-    /*public World(int nbLevel, List<String> levels, Configuration config) {
-        this.nbLevel = nbLevel;
-        this.levels = levels;
-        this.playerLevel = 0;
-        this.config = config;
-    }*/
 
     public World(File file){
         this.fileProperties = file;
@@ -38,7 +31,8 @@ public class World {
             prop.load(in);
             boolean compression = Boolean.parseBoolean(prop.getProperty("compression"));
             nbLevel = prop.getProperty("levels") != null ? Integer.parseInt(prop.getProperty("levels")) : 1;
-            for(int l=1; l < nbLevel+1; l++){
+            levels = new ArrayList<>();
+            for(int l=1; l <= nbLevel; l++){
                 levels.add(prop.getProperty("level"+l));
             }
             config = new Configuration(
@@ -47,6 +41,7 @@ public class World {
                             Integer.parseInt(prop.getProperty("player").split("x")[1])
                     ),
                     prop.getProperty("bombBagCapacity") != null ? Integer.parseInt(prop.getProperty("bombBagCapacity")) : 3,
+                    prop.getProperty("bombStepTimer") != null ? Integer.parseInt(prop.getProperty("bombStepTimer")) : 1000,
                     prop.getProperty("playerLives") != null ? Integer.parseInt(prop.getProperty("playerLives")) : 5,
                     prop.getProperty("playerInvisibilityTime") != null ? Integer.parseInt(prop.getProperty("playerInvisibilityTime")) : 4000,
                     prop.getProperty("monsterVelocity") != null ? Integer.parseInt(prop.getProperty("monsterVelocity")) : 5,
@@ -71,8 +66,14 @@ public class World {
     public List<String> getLevels() {
         return levels;
     }
+    public String getLevel(int index) {
+        return levels.get(index);
+    }
 
     public int getPlayerLevel() {
         return playerLevel;
+    }
+    public void setPlayerLevel(int level) {
+        playerLevel = level;
     }
 }

@@ -8,12 +8,17 @@ import fr.ubx.poo.ubomb.game.Position;
 public class GameLauncher {
 
     public static Game load() {
-        Configuration configuration = new Configuration(new Position(0, 0), 3, 5, 4000, 5, 1000);
+        Configuration configuration = new Configuration(new Position(0, 0), 3, 1000,5, 4000, 5, 1000);
         return new Game(configuration, null, new Level(new MapLevelDefault()));
     }
 
-    /*public static Game load(World world){
-        return new Game(world.getConfig(), this, new Level());
-    }*/
+    public static Game load(World world){
+        MapLevelFactory firstMap = new MapLevelFactory(world.getLevel(0));
+        return new Game(
+                world.getConfig(),
+                world,
+                new Level(firstMap.getMap())
+        );
+    }
 
 }

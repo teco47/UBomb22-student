@@ -9,60 +9,35 @@ import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
-import fr.ubx.poo.ubomb.go.Movable;
-import fr.ubx.poo.ubomb.go.TakeVisitor;
 import fr.ubx.poo.ubomb.go.decor.Decor;
-import fr.ubx.poo.ubomb.go.decor.bonus.Bonus;
-import fr.ubx.poo.ubomb.go.decor.bonus.Key;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class Monster extends Character{
 
-    private boolean isMoving = false;
+    private boolean loopMove = false;
+    private Timer timerMove;
+
 
     public Monster(Game game, Position position, int lives) {
-        super(game, position,lives);
-    }
-
-
-    /*@Override
-    public void take(Key key) {
-        System.out.println("Take the key ...");
-    }*/
-
-
-    public void doMove(Direction direction) {
-        // This method is called only if the move is possible, do not check again
-        Position nextPos = direction.nextPosition(getPosition());
-        List<GameObject> next = new ArrayList<>();
-        next = game.getGameObjects(nextPos);
-        for (GameObject go : next) {
-            if (go instanceof Player player){
-                player.updateLives(-1);
-            }
-        }
-        setPosition(nextPos);
-        isMoving = true;
-        Random rand = new Random();
-        game.addTimer(game.configuration().monsterVelocity()*(int)(500* rand.nextDouble(0.75,1.25)),this, "Monster Velocity");
-        //game.getListTimer().get(game.nameTimer("Monster Velocity Timer "+numMonster)).start();
+        super(game, position,lives,game.configuration().monsterInvisibilityTime());
+        timerMove = new Timer(1000);
+        timerMove.start();
     }
 
     @Override
     public final boolean canMove(Direction direction) {
-        boolean walk =true;
+        boolean walk = true;
         if(game.grid().get(direction.nextPosition(getPosition()))!=null){
             Decor decor = game.grid().get(direction.nextPosition(getPosition()));
             walk = decor.walkableBy(this);
         } else {
-            List<GameObject> next;
+
             Position nextPos = direction.nextPosition(getPosition());
-            next = game.getGameObjects(nextPos);
+            Set<GameObject> next = game.getGameObjects(nextPos);
             for (GameObject go : next) {
-                if (go instanceof Princess p){
+                if (go instanceof Princess ){
                     walk = false;
                 }
             }
@@ -70,25 +45,8 @@ public class Monster extends Character{
         return walk && game.grid().inside(direction.nextPosition(getPosition()));
     }
 
-    @Override
-    public void update(long now) {
-        super.update(now);
-    }
-
-    @Override
-    public void trigger(String flag) {
-        switch (flag){
-            case "Monster Velocity":
-                isMoving=false;
-                break;
-            case "Monster Invisibility":
-                setInvisibility(false);
-                break;
-        }
-    }
-
     public void moveMonster(){
-        if(!isMoving){
+        if(loopMove){
             Random rand = new Random();
             int direction = rand.nextInt(4);
             switch (direction){
@@ -106,12 +64,34 @@ public class Monster extends Character{
                     break;
             }
         }
+    }
 
-
+    public void doMove(Direction direction) {
+        // This method is called only if the move is possible, do not check again
+        Position nextPos = direction.nextPosition(getPosition());
+        Set<GameObject> next = game.getGameObjects(nextPos);
+        for (GameObject go : next) {
+            if (go instanceof Player player){
+                player.updateLives(-1);
+            }
+        }
+        setPosition(nextPos);
+        loopMove = false;
+        timerMove.start();
     }
 
     @Override
-    public void explode() {
-        // TODO
+    public void update(long now) {
+        super.update(now);
+        System.out.println("i'ma monster");
+        timerMove.update(now);//update all timer
+        if(!timerMove.isRunning()){
+            loopMove =true;
+        }
+        moveMonster();
+    }
+
+    @Override
+    public void trigger(String flag) {
     }
 }

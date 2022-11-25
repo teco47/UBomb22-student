@@ -4,28 +4,51 @@
 
 package fr.ubx.poo.ubomb.go.character;
 
+import fr.ubx.poo.ubomb.engine.Timer;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
 
 public class Bomb extends GameObject {
-    int countdow;
+    int countdown;
+    int range;
+    private Timer timerCountdown;
 
-    public Bomb(Game game, Position position) {
+    public Bomb(Game game, Position position, int range) {
         super(game, position);
-        countdow = 4;
+        countdown = 3;
+        this.range = range;
+        timerCountdown = new Timer(game.configuration().bombStepTimer());
+        timerCountdown.start();
     }
 
-    public int getCountdow() {
-        return countdow;
-    }
+    public int getCountdown() {return countdown;}
+    public int getRange() {return range;}
 
-    public void updateCountdow(int countdow) {
-        this.countdow += countdow;
+
+    private void triggerCountdown(){
+        if (countdown > 0){
+            countdown--;
+            setModified(true);
+            timerCountdown.start();
+        }else{
+            explode();
+        }
+    }
+    @Override
+    public void trigger(String flag) {
+    }
+    public void update(long now) {
+        timerCountdown.update(now);
+        if(!timerCountdown.isRunning()){
+            triggerCountdown();
+        }
     }
 
     @Override
-    public void explode() {
+    public boolean explode() {
+        this.remove();
+        return false;
         // TODO
     }
 }

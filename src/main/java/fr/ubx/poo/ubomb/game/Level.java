@@ -46,11 +46,13 @@ public class Level implements Grid {
                         elements.put(position, new Heart(position));
                         break;
                     case DoorPrevOpened:
+                        elements.put(position, new Door(position,true,false));
+                        break;
                     case DoorNextOpened:
-                        elements.put(position, new Door(position,true));
+                        elements.put(position, new Door(position,true,true));
                         break;
                     case DoorNextClosed:
-                        elements.put(position, new Door(position));
+                        elements.put(position, new Door(position,true));
                         break;
                     case BombRangeInc:
                         elements.put(position, new BombRange(position));
@@ -88,7 +90,9 @@ public class Level implements Grid {
     }
 
     public Decor get(Position position) {
-        return elements.get(position);
+        if(position.x()>=0 && position.x()<width && position.y()>=0 && position.y()<height){
+            return elements.get(position);
+        }return null;
     }
 
     @Override

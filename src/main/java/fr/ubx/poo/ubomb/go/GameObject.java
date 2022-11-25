@@ -28,6 +28,7 @@ public abstract class GameObject implements Walkable {
 
     public void setPosition(Position position) {
         this.position = position;
+        //System.out.println("Position : "+this.getPosition());
         setModified(true);
     }
 
@@ -47,8 +48,7 @@ public abstract class GameObject implements Walkable {
         deleted = true;
     }
 
-    public void explode() {
-    }
+    public boolean explode() {return false;}
 
     public void trigger(String flag){ return;}
 }

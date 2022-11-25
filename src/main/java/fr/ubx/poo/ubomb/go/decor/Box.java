@@ -10,4 +10,7 @@ public class Box extends Decor {
     public Box(Position position) {
         super(position);
     }
+
+    @Override
+    public boolean explode() {remove(); return false;}
 }

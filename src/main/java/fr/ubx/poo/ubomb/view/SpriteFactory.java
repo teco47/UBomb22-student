@@ -5,8 +5,10 @@
 package fr.ubx.poo.ubomb.view;
 
 import fr.ubx.poo.ubomb.go.GameObject;
+import fr.ubx.poo.ubomb.go.character.Bomb;
 import fr.ubx.poo.ubomb.go.decor.bonus.*;
 import fr.ubx.poo.ubomb.go.decor.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
 import static fr.ubx.poo.ubomb.view.ImageResource.*;
@@ -15,37 +17,41 @@ import static fr.ubx.poo.ubomb.view.ImageResource.*;
 public final class SpriteFactory {
 
     public static Sprite create(Pane layer, GameObject gameObject) {
+        return new Sprite(layer,getImage(gameObject),gameObject);
+    }
+
+    public static Image getImage(GameObject gameObject) {
         if (gameObject instanceof Stone)
-            return new Sprite(layer, STONE.getImage(), gameObject);
+            return STONE.getImage();
         if (gameObject instanceof Tree)
-            return new Sprite(layer, TREE.getImage(), gameObject);
+            return  TREE.getImage();
         if (gameObject instanceof Box)
-            return new Sprite(layer, BOX.getImage(), gameObject);
-        if (gameObject instanceof Door){
-            if (!((Door) gameObject).getStatus()){//closed
-                return new Sprite(layer, DOOR_CLOSED.getImage(), gameObject);
-            }else{ //open
-                return new Sprite(layer, DOOR_OPENED.getImage(), gameObject);
+            return BOX.getImage();
+        if (gameObject instanceof Door) {
+            if (!((Door) gameObject).getStatus()) {//closed
+                return  DOOR_CLOSED.getImage();
+            } else { //open
+                return DOOR_OPENED.getImage();
             }
         }
-        if (gameObject instanceof BombRange){
-            if (((BombRange) gameObject).getBonus()){//increase
-                return new Sprite(layer, BONUS_BOMB_RANGE_INC.getImage(), gameObject);
-            }else{ //decrease
-                return new Sprite(layer, BONUS_BOMB_RANGE_DEC.getImage(), gameObject);
+        if (gameObject instanceof BombRange) {
+            if (((BombRange) gameObject).getBonus()) {//increase
+                return BONUS_BOMB_RANGE_INC.getImage();
+            } else { //decrease
+                return BONUS_BOMB_RANGE_DEC.getImage();
             }
         }
-        if (gameObject instanceof BombCount){
-            if (((BombCount) gameObject).getBonus()){//increase
-                return new Sprite(layer, BONUS_BOMB_NB_INC.getImage(), gameObject);
-            }else{ //decrease
-                return new Sprite(layer, BONUS_BOMB_NB_DEC.getImage(), gameObject);
+        if (gameObject instanceof BombCount) {
+            if (((BombCount) gameObject).getBonus()) {//increase
+                return BONUS_BOMB_NB_INC.getImage();
+            } else { //decrease
+                return BONUS_BOMB_NB_DEC.getImage();
             }
         }
         if (gameObject instanceof Key)
-            return new Sprite(layer, KEY.getImage(), gameObject);
+            return KEY.getImage();
         if (gameObject instanceof Heart)
-            return new Sprite(layer, HEART.getImage(), gameObject);
+            return HEART.getImage();
         throw new RuntimeException("Unsupported sprite for decor " + gameObject);
     }
 }
