@@ -12,8 +12,6 @@ public class Heart extends Bonus {
         super(position);
     }
 
-    @Override
-    public void explode() {}
 
     @Override
     public void takenBy(Player player) {

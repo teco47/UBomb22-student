@@ -24,4 +24,7 @@ public abstract class Decor extends GameObject {
     public boolean walkableBy(Monster Monster) {
         return false;
     }
+
+    @Override
+    public boolean explode() {return true;}
 }
