@@ -28,7 +28,6 @@ public class Game {
     private Grid grid;
 
     private boolean onPrincess;
-    private final Set<Timer> timerSet;
     private boolean onTravel;
 
     public Game(Configuration configuration, World world, Grid grid) {
@@ -47,7 +46,6 @@ public class Game {
         } else { princess = null;}
         onPrincess = false;
         bombs = new HashSet<>();
-        timerSet = new HashSet<>();
     }
 
     private void reInitCharacter(){

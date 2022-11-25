@@ -43,8 +43,12 @@ public abstract class Character extends GameObject  implements Movable, TakeVisi
                 setLives(getLives()+change);
                 setIsInvisibility(true);
                 timerInvisibility.start();
+                if(getLives() <=0){
+                    remove();
+                }
             }
         }
+
     }
 
     public Direction getDirection() {

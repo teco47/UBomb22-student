@@ -41,9 +41,6 @@ public final class GameEngine {
     private  Princess princess;
     private  Set<Monster> monsters;
     private final Set<Bomb> bombs;
-    private final Set<Timer> timers;
-    private final Set<Timer> addTimers;
-
     private final List<Sprite> sprites = new LinkedList<>();
     private final Set<Sprite> cleanUpSprites = new HashSet<>();
     private final Stage stage;
@@ -58,8 +55,6 @@ public final class GameEngine {
         this.princess = game.princess();
         this.monsters = game.monster();
         this.bombs = game.bombs();
-        this.timers = new HashSet<>();
-        this.addTimers = game.timerSet();
         initialize();
         buildAndSetGameLoop();
     }
@@ -210,7 +205,7 @@ public final class GameEngine {
 
     private int damage(Position src , Direction direction, int range ){
         boolean blocked= false;
-        int i=0;
+        int i=-1;
         while (!blocked && i<range){
             i++;
             Set<GameObject> list  = game.getGameObjects(direction.nextPosition(src,i));

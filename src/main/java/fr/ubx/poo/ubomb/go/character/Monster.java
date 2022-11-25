@@ -24,7 +24,6 @@ public class Monster extends Character{
         super(game, position,lives,game.configuration().monsterInvisibilityTime());
         timerMove = new Timer(1000);
         timerMove.start();
-        System.out.println(timerMove.isRunning());
     }
 
     @Override
@@ -84,6 +83,7 @@ public class Monster extends Character{
     @Override
     public void update(long now) {
         super.update(now);
+        System.out.println("i'ma monster");
         timerMove.update(now);//update all timer
         if(!timerMove.isRunning()){
             loopMove =true;
