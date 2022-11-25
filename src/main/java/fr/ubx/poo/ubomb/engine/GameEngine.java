@@ -36,12 +36,14 @@ public final class GameEngine {
 
     private static AnimationTimer gameLoop;
     private final Game game;
-    private final Player player;
-    private final Princess princess;
-    private final Set<Monster> monsters;
+
+    private  Player player;
+    private  Princess princess;
+    private  Set<Monster> monsters;
     private final Set<Bomb> bombs;
     private final Set<Timer> timers;
     private final Set<Timer> addTimers;
+
     private final List<Sprite> sprites = new LinkedList<>();
     private final Set<Sprite> cleanUpSprites = new HashSet<>();
     private final Stage stage;
@@ -95,25 +97,41 @@ public final class GameEngine {
             sprites.add((new SpriteMonster(layer,m)));
         }
     }
+    void clear(){
+        gameLoop.stop();
+        cleanupSprites();
+        sprites.clear();
+        player = game.player();
+        monsters = game.monster();
+        princess = game.princess();
+    }
 
     void buildAndSetGameLoop() {
         gameLoop = new AnimationTimer() {
             public void handle(long now) {
-                // Check keyboard actions
-                processInput(now);
 
-                // Do actions
-                update(now);
-                //createNewBombs(now);
-                checkCollision(now);
-                checkExplosions();
+                if(game.isOnTravel()){
+                    clear();
+                    initialize();
+                    game.endTravel();
+                    gameLoop.start();
+                } else {
+                    // Check keyboard actions
+                  processInput(now);
 
-                checkTrigger();
+                  // Do actions
+                  update(now);
+                  //createNewBombs(now);
+                  checkCollision(now);
+                  checkExplosions();
 
-                // Graphic update
-                cleanupSprites();
-                render();
-                statusBar.update(game);
+                  checkTrigger();
+
+                    // Graphic update
+                    cleanupSprites();
+                    render();
+                    statusBar.update(game);
+                }
             }
         };
     }
