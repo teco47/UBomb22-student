@@ -41,6 +41,7 @@ public class World {
                             Integer.parseInt(prop.getProperty("player").split("x")[1])
                     ),
                     prop.getProperty("bombBagCapacity") != null ? Integer.parseInt(prop.getProperty("bombBagCapacity")) : 3,
+                    prop.getProperty("bombStepTimer") != null ? Integer.parseInt(prop.getProperty("bombStepTimer")) : 1000,
                     prop.getProperty("playerLives") != null ? Integer.parseInt(prop.getProperty("playerLives")) : 5,
                     prop.getProperty("playerInvisibilityTime") != null ? Integer.parseInt(prop.getProperty("playerInvisibilityTime")) : 4000,
                     prop.getProperty("monsterVelocity") != null ? Integer.parseInt(prop.getProperty("monsterVelocity")) : 5,

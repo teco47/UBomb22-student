@@ -48,8 +48,7 @@ public abstract class GameObject implements Walkable {
         deleted = true;
     }
 
-    public void explode() {
-    }
+    public boolean explode() {return false;}
 
     public void trigger(String flag){ return;}
 }
