@@ -36,9 +36,13 @@ public class Monster extends Character{
 
             Position nextPos = direction.nextPosition(getPosition());
             Set<GameObject> next = game.getGameObjects(nextPos);
+            if(game.grid().get(direction.nextPosition(getPosition()))!=null) {
+                next.add(game.grid().get(direction.nextPosition(getPosition())));
+            }
             for (GameObject go : next) {
-                if (go instanceof Princess ){
-                    walk = false;
+                if(!go.walkableBy(this)){
+                    walk=false;
+                    break;
                 }
             }
         }

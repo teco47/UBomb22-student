@@ -20,6 +20,9 @@ public class Princess extends GameObject implements TakeVisitor {
     }
 
     @Override
+    public boolean walkableBy(Monster monster) {return false;}
+
+    @Override
     public boolean explode() {
         return false;
     }

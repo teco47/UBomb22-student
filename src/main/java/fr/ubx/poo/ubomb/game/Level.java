@@ -90,6 +90,7 @@ public class Level implements Grid {
     }
 
     public Decor get(Position position) {
+
         if(position.x()>=0 && position.x()<width && position.y()>=0 && position.y()<height){
             return elements.get(position);
         }return null;
