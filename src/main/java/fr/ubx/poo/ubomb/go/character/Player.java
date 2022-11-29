@@ -4,20 +4,16 @@
 
 package fr.ubx.poo.ubomb.go.character;
 
-import fr.ubx.poo.ubomb.engine.Timer;
+
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
-import fr.ubx.poo.ubomb.go.Movable;
-import fr.ubx.poo.ubomb.go.TakeVisitor;
 import fr.ubx.poo.ubomb.go.decor.Decor;
 import fr.ubx.poo.ubomb.go.decor.Door;
 import fr.ubx.poo.ubomb.go.decor.bonus.*;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
+
 
 public class Player extends Character{
 
@@ -28,7 +24,7 @@ public class Player extends Character{
     @Override
     public void take(Key key) {
         System.out.println("Take the key ...");
-        game.key(1);
+        game.addKey(1);
     }
 
     @Override
@@ -59,8 +55,6 @@ public class Player extends Character{
             if (go instanceof Bonus bonus) {
                 bonus.takenBy(this);
                 bonus.remove();
-            } else if (go instanceof Door){
-                ((Door) go).travel(this.game);
             } else if (go instanceof Monster){
                 updateLives(-1);
             } else if(go instanceof Princess){
@@ -82,5 +76,17 @@ public class Player extends Character{
 
     public void update(long now) {
         super.update(now);
+    }
+
+    public void openDoor(){
+        if(game.key()>0){
+            if(game.grid().get(this.getDirection().nextPosition(getPosition())) instanceof Door){
+                Door d = ((Door)game.grid().get(this.getDirection().nextPosition(getPosition())));
+                if(!d.isOpen()){
+                    d.setOpen();
+                    game.addKey(-1);
+                }
+            }
+        }
     }
 }

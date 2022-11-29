@@ -14,6 +14,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.util.List;
 import java.util.Properties;
 
 import static javafx.beans.property.IntegerProperty.integerProperty;
@@ -51,8 +52,8 @@ public class GameLauncherView extends BorderPane {
             File file = fileChooser.showOpenDialog(stage);
             if (file != null) {
                 World world = new World(file);
-                Game game = GameLauncher.load(world);
-                GameEngine engine = new GameEngine(game, stage);
+                List<Game> levels = GameLauncher.load(world);
+                GameEngine engine = new GameEngine(levels, stage, world);
                 engine.start();
             }
         });
@@ -60,7 +61,7 @@ public class GameLauncherView extends BorderPane {
 
         defaultItem.setOnAction(e -> {
             Game game = GameLauncher.load();
-            GameEngine engine = new GameEngine(game, stage);
+            GameEngine engine = new GameEngine(game, stage, null);
             engine.start();
         });
 

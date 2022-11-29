@@ -13,6 +13,8 @@ import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.character.Player;
 import fr.ubx.poo.ubomb.go.character.Princess;
 import fr.ubx.poo.ubomb.go.decor.Decor;
+import fr.ubx.poo.ubomb.go.decor.Door;
+import fr.ubx.poo.ubomb.launcher.World;
 import fr.ubx.poo.ubomb.view.*;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
@@ -35,12 +37,14 @@ import java.util.*;
 public final class GameEngine {
 
     private static AnimationTimer gameLoop;
-    private final Game game;
+    private final World world;
+    private final List<Game> levels;
+    private Game currentGame;
 
-    private  Player player;
-    private  Princess princess;
-    private  Set<Monster> monsters;
-    private final Set<Bomb> bombs;
+    private Player player;
+    private Princess princess;
+    private Set<Monster> monsters;
+    private Set<Bomb> bombs;
     private final List<Sprite> sprites = new LinkedList<>();
     private final Set<Sprite> cleanUpSprites = new HashSet<>();
     private final Stage stage;
@@ -48,23 +52,40 @@ public final class GameEngine {
     private Pane layer;
     private Input input;
 
-    public GameEngine(Game game, final Stage stage) {
+    public GameEngine(Game game, final Stage stage, World world) {
         this.stage = stage;
-        this.game = game;
-        this.player = game.player();
-        this.princess = game.princess();
-        this.monsters = game.monster();
-        this.bombs = game.bombs();
+        this.world = world;
+        this.levels = new ArrayList<>();
+        levels.add(game);
+        setup(0);
+    }
+    public GameEngine(List<Game> levels, final Stage stage, World world) {
+        this.stage = stage;
+        this.world = world;
+        this.levels = levels;
+        setup(0);
+    }
+
+    private void setup(int indexLevel){
+        currentGame = levels.get(indexLevel);
+        currentGame.started = true;
+        sprites.clear();
+        this.player = currentGame.player();
+        this.princess = currentGame.princess();
+        this.monsters = currentGame.monster();
+        this.bombs = currentGame.bombs();
+        System.out.println("CHangement de monde");
         initialize();
         buildAndSetGameLoop();
     }
+
 
     private void initialize() {
         Group root = new Group();
         layer = new Pane();
 
-        int height = game.grid().height();
-        int width = game.grid().width();
+        int height = currentGame.grid().height();
+        int width = currentGame.grid().width();
         int sceneWidth = width * ImageResource.size;
         int sceneHeight = height * ImageResource.size;
         Scene scene = new Scene(root, sceneWidth, sceneHeight + StatusBar.height);
@@ -77,56 +98,48 @@ public final class GameEngine {
 
         input = new Input(scene);
         root.getChildren().add(layer);
-        statusBar = new StatusBar(root, sceneWidth, sceneHeight, game);
+        statusBar = new StatusBar(root, sceneWidth, sceneHeight, currentGame);
 
         // Create decors sprite
-        for (var decor : game.grid().values()) {
+        for (var decor : currentGame.grid().values()) {
             sprites.add(SpriteFactory.create(layer, decor));
             decor.setModified(true);
         }
 
         sprites.add(new SpritePlayer(layer, player));
-        if(princess!=null){ sprites.add(new SpritePrincess(layer,princess)); }
+        if(princess!=null){
+            sprites.add(new SpritePrincess(layer,princess));
+            System.out.println("Princess position : "+princess.getPosition());
+        }
+        else {
+            System.out.println("pas de princesse");
+        }
 
         for(Monster m : monsters){
             sprites.add((new SpriteMonster(layer,m)));
         }
     }
-    void clear(){
-        gameLoop.stop();
-        cleanupSprites();
-        sprites.clear();
-        player = game.player();
-        monsters = game.monster();
-        princess = game.princess();
-    }
 
     void buildAndSetGameLoop() {
         gameLoop = new AnimationTimer() {
             public void handle(long now) {
+                checkTravel();
 
-                if(game.isOnTravel()){
-                    clear();
-                    initialize();
-                    game.endTravel();
-                    gameLoop.start();
-                } else {
-                    // Check keyboard actions
-                  processInput(now);
+                // Check keyboard actions
+                processInput(now);
 
-                  // Do actions
-                  update(now);
-                  //createNewBombs(now);
-                  checkCollision(now);
-                  checkExplosions();
+                // Do actions
+                update(now);
+                //createNewBombs(now);
+                checkCollision(now);
+                checkExplosions();
 
-                  checkTrigger();
+                checkTrigger();
 
-                    // Graphic update
-                    cleanupSprites();
-                    render();
-                    statusBar.update(game);
-                }
+                // Graphic update
+                cleanupSprites();
+                render();
+                statusBar.update(currentGame);
             }
         };
     }
@@ -138,24 +151,26 @@ public final class GameEngine {
         // Check explosions of bombs
     }
 
-    private void animateExplosion(Position src, Position dst) {
-        ImageView explosion = new ImageView(ImageResource.EXPLOSION.getImage());
-        TranslateTransition tt = new TranslateTransition(Duration.millis(200), explosion);
-        tt.setFromX(src.x() * Sprite.size);
-        tt.setFromY(src.y() * Sprite.size);
-        tt.setToX(dst.x() * Sprite.size);
-        tt.setToY(dst.y() * Sprite.size);
-        tt.setOnFinished(e -> {
-            layer.getChildren().remove(explosion);
-        });
-        layer.getChildren().add(explosion);
-        tt.play();
+    private void animateExplosion(Position src, Position dst, Game game) {
+        if(game.equals(currentGame)){
+            ImageView explosion = new ImageView(ImageResource.EXPLOSION.getImage());
+            TranslateTransition tt = new TranslateTransition(Duration.millis(200), explosion);
+            tt.setFromX(src.x() * Sprite.size);
+            tt.setFromY(src.y() * Sprite.size);
+            tt.setToX(dst.x() * Sprite.size);
+            tt.setToY(dst.y() * Sprite.size);
+            tt.setOnFinished(e -> {
+                layer.getChildren().remove(explosion);
+            });
+            layer.getChildren().add(explosion);
+            tt.play();
+        }
     }
 
     private void createNewBombs(/*long now*/) {
         if( !bombs.stream().anyMatch(bb -> bb.getPosition()==player.getPosition())  &&
-        game.bombParameter().retrieveBomb(-1)) {
-            Bomb bomb = new Bomb(game, player.getPosition(),game.bombParameter().getRange());
+                currentGame.bombParameter().retrieveBomb(-1)) {
+            Bomb bomb = new Bomb(currentGame, player.getPosition(),currentGame.bombParameter().getRange());
             bombs.add(bomb);
             sprites.add(new SpriteBomb(layer,bomb));
         }else{
@@ -164,6 +179,29 @@ public final class GameEngine {
 
     private void checkCollision(long now) {
         // Check a collision between a monster and the player
+    }
+    
+    private void checkTravel(){
+        for (Door d : currentGame.grid().doorSet()) {
+            if(player.getPosition().equals(d.getPosition())){
+                gameLoop.stop();
+                world.setPlayerLevel(world.getPlayerLevel() + (d.upStair() ? +1 : -1));
+                Game ancientGame = currentGame;
+                setup(world.getPlayerLevel());
+                changeGame(ancientGame);
+                gameLoop.start();
+            }
+        }
+    }
+
+    private void changeGame(Game ancientGame){
+        ancientGame.player().setPosition(world.getConfig().playerPosition());
+        currentGame.player().setLives(ancientGame.player().getLives());
+        currentGame.setKey(ancientGame.key());
+        currentGame.setBombParameter(ancientGame.bombParameter());
+        for (Monster m: monsters) {
+            m.setTimerMove((int)(10000/ (world.getConfig().monsterVelocity() + 5 * world.getPlayerLevel())));
+        }
     }
 
     private void processInput(long now) {
@@ -181,6 +219,8 @@ public final class GameEngine {
             player.requestMove(Direction.UP);
         } else if (input.isBomb()) {
             createNewBombs();
+        } else if (input.isKey()){
+            player.openDoor();
         }
         input.clear();
     }
@@ -203,7 +243,7 @@ public final class GameEngine {
         }.start();
     }
 
-    private int damage(Position src , Direction direction, int range ){
+    private int damage(Position src , Direction direction, int range, Game game){
         boolean blocked= false;
         int i=-1;
         while (!blocked && i<range){
@@ -221,40 +261,44 @@ public final class GameEngine {
     }
 
     private void explosion (Bomb bomb){
-        animateExplosion(bomb.getPosition(),Direction.DOWN.nextPosition(bomb.getPosition(),damage(bomb.getPosition(),Direction.DOWN,bomb.getRange())));
-        animateExplosion(bomb.getPosition(),Direction.UP.nextPosition(bomb.getPosition(),damage(bomb.getPosition(),Direction.UP,bomb.getRange())));
-        animateExplosion(bomb.getPosition(),Direction.RIGHT.nextPosition(bomb.getPosition(),damage(bomb.getPosition(),Direction.RIGHT,bomb.getRange())));
-        animateExplosion(bomb.getPosition(),Direction.LEFT.nextPosition(bomb.getPosition(),damage(bomb.getPosition(),Direction.LEFT,bomb.getRange())));
+        animateExplosion(bomb.getPosition(),Direction.DOWN.nextPosition(bomb.getPosition(),damage(bomb.getPosition(),Direction.DOWN,bomb.getRange(),bomb.game)),bomb.game);
+        animateExplosion(bomb.getPosition(),Direction.UP.nextPosition(bomb.getPosition(),damage(bomb.getPosition(),Direction.UP,bomb.getRange(),bomb.game)),bomb.game);
+        animateExplosion(bomb.getPosition(),Direction.RIGHT.nextPosition(bomb.getPosition(),damage(bomb.getPosition(),Direction.RIGHT,bomb.getRange(),bomb.game)),bomb.game);
+        animateExplosion(bomb.getPosition(),Direction.LEFT.nextPosition(bomb.getPosition(),damage(bomb.getPosition(),Direction.LEFT,bomb.getRange(),bomb.game)),bomb.game);
 
-
-
-        game.bombParameter().retrieveBomb(1);
+        bomb.game.bombParameter().retrieveBomb(1);
     }
+
     private void update(long now) {
         player.update(now);
 
-        Iterator monsterIt = monsters.iterator();
-        while (monsterIt.hasNext()){
-            Monster m = (Monster) monsterIt.next();
-            if(m.isDeleted()){monsterIt.remove();}
-            else{m.update(now);}
-        }
+        for (Game g : levels) {
+            if(g.started){
+                Iterator monsterIt = g.monster().iterator();
+                while (monsterIt.hasNext()){
+                    Monster m = (Monster) monsterIt.next();
+                    if(m.isDeleted()){monsterIt.remove();}
+                    else{m.update(now);}
+                }
 
-        Iterator bombIt = bombs.iterator();
-        while (bombIt.hasNext()){
-            Bomb b = (Bomb) bombIt.next();
-            if(b.isDeleted()){
-                explosion(b);
-                bombIt.remove();
-            }else{
-                b.update(now);
+                Iterator bombIt = g.bombs().iterator();
+                while (bombIt.hasNext()){
+                    Bomb b = (Bomb) bombIt.next();
+                    if(b.isDeleted()){
+                        explosion(b);
+                        bombIt.remove();
+                    }else{
+                        b.update(now);
+                    }
+                }
             }
         }
+
         if (player.getLives() == 0) {
             gameLoop.stop();
             showMessage("Perdu!", Color.RED);
         }
-        if (game.getOnPrincess()) {
+        if (currentGame.getOnPrincess()) {
             gameLoop.stop();
             showMessage("Victoire", Color.RED);
         }
@@ -263,7 +307,7 @@ public final class GameEngine {
     public void cleanupSprites() {
         sprites.forEach(sprite -> {
             if (sprite.getGameObject().isDeleted()) {
-                game.grid().remove(sprite.getPosition());
+                currentGame.grid().remove(sprite.getPosition());
                 cleanUpSprites.add(sprite);
             }
         });

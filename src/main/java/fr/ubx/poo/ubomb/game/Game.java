@@ -1,21 +1,17 @@
 package fr.ubx.poo.ubomb.game;
 
-import fr.ubx.poo.ubomb.engine.Timer;
 import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.character.Bomb;
 import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.character.Player;
 import fr.ubx.poo.ubomb.go.character.Princess;
-import fr.ubx.poo.ubomb.launcher.MapLevelFactory;
-import fr.ubx.poo.ubomb.launcher.World;
-import javafx.geometry.Pos;
 
 import java.util.*;
 
 public class Game {
 
     private final Configuration configuration;
-    private final World world;
+    public boolean started=false;
 
     private Player player;
     private Princess princess;
@@ -30,9 +26,8 @@ public class Game {
     private boolean onPrincess;
     private boolean onTravel;
 
-    public Game(Configuration configuration, World world, Grid grid) {
+    public Game(Configuration configuration, Grid grid) {
         this.configuration = configuration;
-        this.world = world;
         this.grid = grid;
 
         bombParameter = new BombParameter(this.configuration().bombBagCapacity());
@@ -47,27 +42,6 @@ public class Game {
         onPrincess = false;
         bombs = new HashSet<>();
     }
-
-    private void reInitCharacter(){
-        //player.setPosition(configuration.playerPosition());
-        /*player.updateLives(-5);
-        player.setPosition(new Position(0,0));*/
-        int remainingLives = player.getLives();
-        player = new Player(this, new Position(0,0));
-        player.setLives(remainingLives);
-        monsters.clear();
-        for(Position pos : grid.monstersSet()){
-            monsters.add(new Monster(this,pos,monsters.size()));
-        }
-        if(grid.getPrincess() != null){
-            princess = new Princess(this, grid.getPrincess());
-        } else { princess = null;}
-    }
-
-    public Configuration configuration() {
-        return configuration;
-    }
-
 
     // Returns the player, monsters and bomb at a given position
     public Set<GameObject> getGameObjects(Position position) {
@@ -94,6 +68,10 @@ public class Game {
         grid.remove(position);
     }
 
+    public Configuration configuration() {
+        return configuration;
+    }
+
     public Grid grid() {
         return grid;
     }
@@ -102,6 +80,7 @@ public class Game {
         return this.player;
     }
     public BombParameter bombParameter(){return this.bombParameter;}
+    public void setBombParameter(BombParameter bp){this.bombParameter = bp;}
     public Princess princess(){ return this.princess;}
     public Set<Monster> monster(){ return this.monsters;}
     public Set<Bomb> bombs(){ return this.bombs;}
@@ -111,19 +90,7 @@ public class Game {
         onPrincess = on;
     }
     public int key(){return key;}
-    public void key(int i){ key+=i;}
+    public void addKey(int i){ key+=i;}
+    public void setKey(int nb){key = nb;}
     public boolean getOnPrincess() { return onPrincess;}
-
-    public void travelTo(boolean upStair){
-        int toLevel = world.getPlayerLevel() + (upStair ? 1:-1);
-        MapLevelFactory nextMap = new MapLevelFactory(world.getLevel(toLevel));
-        world.setPlayerLevel(toLevel);
-        grid = new Level(nextMap.getMap());
-
-        reInitCharacter();
-        onTravel = true;
-    }
-    public boolean isOnTravel(){return onTravel;}
-
-    public void endTravel(){ onTravel = false;}
 }

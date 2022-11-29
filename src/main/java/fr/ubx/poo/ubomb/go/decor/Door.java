@@ -28,6 +28,7 @@ public class Door extends Decor {
     public Boolean setOpen(){
         boolean already = open? false : true;
         open = true;
+        setModified(true);
         return already;
     }
 
@@ -35,10 +36,9 @@ public class Door extends Decor {
 
     @Override
     public boolean walkableBy(Player player) {
-        return true;
+        return open;
     }
 
-    public void travel(Game game){
-        game.travelTo(upStair);
-    }
+    public boolean isOpen() {return open;}
+    public boolean upStair(){return upStair;}
 }
