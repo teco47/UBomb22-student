@@ -49,9 +49,6 @@ public class Game {
     }
 
     private void reInitCharacter(){
-        //player.setPosition(configuration.playerPosition());
-        /*player.updateLives(-5);
-        player.setPosition(new Position(0,0));*/
         int remainingLives = player.getLives();
         player = new Player(this, new Position(0,0));
         player.setLives(remainingLives);
@@ -88,10 +85,6 @@ public class Game {
             }
         }
         return gos;
-    }
-
-    public void removeBonus(Position position){
-        grid.remove(position);
     }
 
     public Grid grid() {

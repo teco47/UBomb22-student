@@ -11,6 +11,7 @@ import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.Movable;
 import fr.ubx.poo.ubomb.go.TakeVisitor;
+import fr.ubx.poo.ubomb.go.decor.Box;
 import fr.ubx.poo.ubomb.go.decor.Decor;
 import fr.ubx.poo.ubomb.go.decor.Door;
 import fr.ubx.poo.ubomb.go.decor.bonus.*;
@@ -20,6 +21,8 @@ import java.util.List;
 import java.util.Set;
 
 public class Player extends Character{
+
+    //boolean moveObject;
 
     public Player(Game game, Position position) {
         super(game, position, game.configuration().playerLives(),game.configuration().playerInvisibilityTime());
@@ -49,6 +52,20 @@ public class Player extends Character{
         System.out.println("Take the bomb count " + (bombCount.getBonus()?"increase":"decrease") + " ...");
     }
 
+    public final boolean canMove(Direction direction) {
+        boolean walk =true;
+        Position newPosition = direction.nextPosition(getPosition());
+        GameObject object = game.grid().get(newPosition);
+        if(object!=null){
+            if (object instanceof Box){
+                moveObject(object,direction);
+            }
+            walk = ((Decor)object).walkableBy(this);
+        }
+        return walk && game.grid().inside(direction.nextPosition(getPosition()));
+
+    }
+
     @Override
     public void doMove(Direction direction) {
         // This method is called only if the move is possible, do not check again
@@ -70,14 +87,17 @@ public class Player extends Character{
         setPosition(nextPos);
     }
 
-    public final boolean canMove(Direction direction) {
-        boolean walk =true;
-        if(game.grid().get(direction.nextPosition(getPosition()))!=null){
-            Decor decor = game.grid().get(direction.nextPosition(getPosition()));
-            walk = decor.walkableBy(this);
+    public void moveObject(GameObject object, Direction direction){
+        Position objectPosition = direction.nextPosition(getPosition());
+        Position newPosition = direction.nextPosition(objectPosition);
+        Set<GameObject> setObject = game.getGameObjects(newPosition);
+        setObject.add(game.grid().get(newPosition));
+        setObject.remove(null);
+        if (setObject.size()==0){
+            object.setPosition(newPosition);
+            game.grid().remove(objectPosition);
+            game.grid().set(newPosition, (Decor) object);
         }
-        return walk && game.grid().inside(direction.nextPosition(getPosition()));
-
     }
 
     public void update(long now) {
