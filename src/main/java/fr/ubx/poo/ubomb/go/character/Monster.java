@@ -93,8 +93,4 @@ public class Monster extends Character{
         }
         moveMonster();
     }
-
-    @Override
-    public void trigger(String flag) {
-    }
 }

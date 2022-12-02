@@ -205,7 +205,7 @@ public final class GameEngine {
 
     private int damage(Position src , Direction direction, int range ){
         boolean blocked= false;
-        int i=-1;
+        int i=0;
         while (!blocked && i<range){
             i++;
             Set<GameObject> list  = game.getGameObjects(direction.nextPosition(src,i));
@@ -263,7 +263,9 @@ public final class GameEngine {
     public void cleanupSprites() {
         sprites.forEach(sprite -> {
             if (sprite.getGameObject().isDeleted()) {
-                game.grid().remove(sprite.getPosition());
+                if(!(sprite.getGameObject() instanceof Bomb)){
+                    game.grid().remove(sprite.getPosition());
+                }
                 cleanUpSprites.add(sprite);
             }
         });

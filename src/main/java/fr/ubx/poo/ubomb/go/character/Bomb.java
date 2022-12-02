@@ -8,6 +8,7 @@ import fr.ubx.poo.ubomb.engine.Timer;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
+import fr.ubx.poo.ubomb.go.Pushable;
 
 public class Bomb extends GameObject {
     int countdown;
@@ -35,9 +36,6 @@ public class Bomb extends GameObject {
             explode();
         }
     }
-    @Override
-    public void trigger(String flag) {
-    }
     public void update(long now) {
         timerCountdown.update(now);
         if(!timerCountdown.isRunning()){
@@ -50,5 +48,10 @@ public class Bomb extends GameObject {
         this.remove();
         return false;
         // TODO
+    }
+
+    @Override
+    public void pushBy(Player player) {
+        player.push(this);
     }
 }

@@ -14,6 +14,7 @@ import fr.ubx.poo.ubomb.go.TakeVisitor;
 import fr.ubx.poo.ubomb.go.decor.Box;
 import fr.ubx.poo.ubomb.go.decor.Decor;
 import fr.ubx.poo.ubomb.go.decor.Door;
+import fr.ubx.poo.ubomb.go.decor.Tree;
 import fr.ubx.poo.ubomb.go.decor.bonus.*;
 
 import java.util.ArrayList;
@@ -53,15 +54,23 @@ public class Player extends Character{
     }
 
     public final boolean canMove(Direction direction) {
-        boolean walk =true;
+        boolean walk = true;
         Position newPosition = direction.nextPosition(getPosition());
-        GameObject object = game.grid().get(newPosition);
-        if(object!=null){
-            if (object instanceof Box){
-                moveObject(object,direction);
+        //GameObject object = game.grid().get(newPosition);
+
+        Set<GameObject> setObject = game.getGameObjects(newPosition);
+        setObject.add(game.grid().get(newPosition));
+        setObject.remove(null);
+        setObject.forEach( (object) -> System.out.println(object.toString()));
+        walk = !setObject.stream().anyMatch(obj -> !obj.walkableBy(this));
+        setObject.forEach( (object) -> object.pushBy(this));
+
+        /*if(object!=null){
+            if (object instanceof Box ) {
+                pushBy(this);
             }
             walk = ((Decor)object).walkableBy(this);
-        }
+        }*/
         return walk && game.grid().inside(direction.nextPosition(getPosition()));
 
     }
@@ -87,17 +96,20 @@ public class Player extends Character{
         setPosition(nextPos);
     }
 
-    public void moveObject(GameObject object, Direction direction){
-        Position objectPosition = direction.nextPosition(getPosition());
-        Position newPosition = direction.nextPosition(objectPosition);
+    public void push(Box box){
+        Position newPosition = getDirection().nextPosition(box.getPosition());
         Set<GameObject> setObject = game.getGameObjects(newPosition);
         setObject.add(game.grid().get(newPosition));
         setObject.remove(null);
         if (setObject.size()==0){
-            object.setPosition(newPosition);
-            game.grid().remove(objectPosition);
-            game.grid().set(newPosition, (Decor) object);
+            game.grid().remove(box.getPosition());
+            game.grid().set(newPosition, box);
+            box.setPosition(newPosition);
         }
+    }
+
+    public void push (Bomb bomb){
+        bomb.setPosition(getDirection().nextPosition(bomb.getPosition(),bomb.getRange()));
     }
 
     public void update(long now) {
