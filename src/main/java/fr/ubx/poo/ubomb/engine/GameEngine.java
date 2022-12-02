@@ -203,16 +203,16 @@ public final class GameEngine {
         }.start();
     }
 
-    private int damage(Position src , Direction direction, int range ){
+    private int damage(Position src, Direction direction, int range ){
         boolean blocked= false;
-        int i=0;
+        int i=-1;
         while (!blocked && i<range){
             i++;
             Set<GameObject> list  = game.getGameObjects(direction.nextPosition(src,i));
             list.add(game.grid().get(direction.nextPosition(src,i)));
             list.remove(null);
             for(GameObject iter : list){
-                if (iter.explode()){
+                if (iter.explode() && i!=0){
                     blocked = true;
                 }
             }

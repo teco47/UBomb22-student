@@ -61,7 +61,6 @@ public class Player extends Character{
         Set<GameObject> setObject = game.getGameObjects(newPosition);
         setObject.add(game.grid().get(newPosition));
         setObject.remove(null);
-        setObject.forEach( (object) -> System.out.println(object.toString()));
         walk = !setObject.stream().anyMatch(obj -> !obj.walkableBy(this));
         setObject.forEach( (object) -> object.pushBy(this));
 
@@ -109,7 +108,19 @@ public class Player extends Character{
     }
 
     public void push (Bomb bomb){
-        bomb.setPosition(getDirection().nextPosition(bomb.getPosition(),bomb.getRange()));
+        Position newPosition = getDirection().nextPosition(bomb.getPosition(),bomb.getRange());
+        if (game.grid().inside(newPosition)){
+            bomb.setPosition(newPosition);
+        }else{
+            System.out.println("opposit");
+            Direction oppositeDirection = getDirection().opposite();
+            while( !game.grid().inside(newPosition)){
+                newPosition = oppositeDirection.nextPosition(newPosition);
+                System.out.println(newPosition);
+            }
+            bomb.setPosition(newPosition);
+        }
+
     }
 
     public void update(long now) {
