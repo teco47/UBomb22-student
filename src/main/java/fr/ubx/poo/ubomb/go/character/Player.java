@@ -17,6 +17,7 @@ import java.util.Set;
 
 public class Player extends Character{
 
+
     public Player(Game game, Position position) {
         super(game, position, game.configuration().playerLives(),game.configuration().playerInvisibilityTime());
     }

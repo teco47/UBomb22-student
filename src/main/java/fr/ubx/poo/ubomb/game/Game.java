@@ -16,17 +16,13 @@ public class Game {
     private Player player;
     private Princess princess;
     final private Set<Monster> monsters;
-
     private BombParameter bombParameter;
     final private Set<Bomb> bombs;
     private int key=0;
-
     private Grid grid;
-
     private boolean onPrincess;
-    private boolean onTravel;
 
-    public Game(Configuration configuration, Grid grid) {
+    public Game(Configuration configuration, Grid grid, int level) {
         this.configuration = configuration;
         this.grid = grid;
 
@@ -34,7 +30,7 @@ public class Game {
         player = new Player(this, configuration.playerPosition());
         monsters = new HashSet<>();
         for(Position pos : grid().monstersSet()){
-            monsters.add(new Monster(this,pos,1));
+            monsters.add(new Monster(this,pos,level));
         }
         if(grid.getPrincess() != null){
             princess = new Princess(this, grid.getPrincess());

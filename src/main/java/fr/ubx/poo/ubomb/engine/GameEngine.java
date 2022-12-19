@@ -74,7 +74,7 @@ public final class GameEngine {
         this.princess = currentGame.princess();
         this.monsters = currentGame.monster();
         this.bombs = currentGame.bombs();
-        System.out.println("CHangement de monde");
+        System.out.println("Changement de monde");
         initialize();
         buildAndSetGameLoop();
     }
@@ -197,10 +197,13 @@ public final class GameEngine {
     private void changeGame(Game ancientGame){
         ancientGame.player().setPosition(world.getConfig().playerPosition());
         currentGame.player().setLives(ancientGame.player().getLives());
+        currentGame.player().setModified(true);
+        if(currentGame.princess()!=null){currentGame.princess().setModified(true);}
         currentGame.setKey(ancientGame.key());
         currentGame.setBombParameter(ancientGame.bombParameter());
         for (Monster m: monsters) {
             m.setTimerMove((int)(10000/ (world.getConfig().monsterVelocity() + 5 * world.getPlayerLevel())));
+            m.setModified(true);
         }
     }
 

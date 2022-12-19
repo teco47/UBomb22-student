@@ -7,6 +7,7 @@ package fr.ubx.poo.ubomb.view;
 import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.character.Bomb;
+import fr.ubx.poo.ubomb.go.character.Monster;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -52,7 +53,7 @@ public class Sprite {
             imageView = new ImageView(this.image);
             imageView.setX(getPosition().x() * size);
             imageView.setY(getPosition().y() * size);
-            layer.getChildren().add(imageView);
+            layer.getChildren().add(changeColor(imageView));
             gameObject.setModified(false);
         }
     }
@@ -60,5 +61,9 @@ public class Sprite {
     public final void remove() {
         layer.getChildren().remove(imageView);
         imageView = null;
+    }
+
+    protected ImageView changeColor(ImageView imgV){
+        return imgV;
     }
 }
