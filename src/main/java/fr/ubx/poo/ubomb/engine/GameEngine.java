@@ -262,7 +262,7 @@ public final class GameEngine {
             list.add(game.grid().get(direction.nextPosition(src,i)));
             list.remove(null);
             for(GameObject iter : list){
-                if (iter.explode()){
+                if (iter.explode() && i!=0){
                     blocked = true;
                 }
             }
@@ -317,7 +317,9 @@ public final class GameEngine {
     public void cleanupSprites() {
         sprites.forEach(sprite -> {
             if (sprite.getGameObject().isDeleted()) {
-                currentGame.grid().remove(sprite.getPosition());
+                if(!(sprite.getGameObject() instanceof Bomb)){
+                    game.grid().remove(sprite.getPosition());
+                }
                 cleanUpSprites.add(sprite);
             }
         });

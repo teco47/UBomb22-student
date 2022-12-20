@@ -38,7 +38,7 @@ public class Game {
         onPrincess = false;
         bombs = new HashSet<>();
     }
-
+    
     // Returns the player, monsters and bomb at a given position
     public Set<GameObject> getGameObjects(Position position) {
         Set<GameObject> gos = new HashSet<>();
@@ -59,6 +59,7 @@ public class Game {
         }
         return gos;
     }
+
 
     public void removeBonus(Position position){
         grid.remove(position);

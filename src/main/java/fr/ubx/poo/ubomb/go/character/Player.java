@@ -9,13 +9,20 @@ import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
+import fr.ubx.poo.ubomb.go.Movable;
+import fr.ubx.poo.ubomb.go.TakeVisitor;
+import fr.ubx.poo.ubomb.go.decor.Box;
+
 import fr.ubx.poo.ubomb.go.decor.Decor;
 import fr.ubx.poo.ubomb.go.decor.Door;
+import fr.ubx.poo.ubomb.go.decor.Tree;
 import fr.ubx.poo.ubomb.go.decor.bonus.*;
 import java.util.Set;
 
 
 public class Player extends Character{
+
+    //boolean moveObject;
 
 
     public Player(Game game, Position position) {
@@ -46,6 +53,27 @@ public class Player extends Character{
         System.out.println("Take the bomb count " + (bombCount.getBonus()?"increase":"decrease") + " ...");
     }
 
+    public final boolean canMove(Direction direction) {
+        boolean walk = true;
+        Position newPosition = direction.nextPosition(getPosition());
+        //GameObject object = game.grid().get(newPosition);
+
+        Set<GameObject> setObject = game.getGameObjects(newPosition);
+        setObject.add(game.grid().get(newPosition));
+        setObject.remove(null);
+        walk = !setObject.stream().anyMatch(obj -> !obj.walkableBy(this));
+        setObject.forEach( (object) -> object.pushBy(this));
+
+        /*if(object!=null){
+            if (object instanceof Box ) {
+                pushBy(this);
+            }
+            walk = ((Decor)object).walkableBy(this);
+        }*/
+        return walk && game.grid().inside(direction.nextPosition(getPosition()));
+
+    }
+
     @Override
     public void doMove(Direction direction) {
         // This method is called only if the move is possible, do not check again
@@ -65,13 +93,31 @@ public class Player extends Character{
         setPosition(nextPos);
     }
 
-    public final boolean canMove(Direction direction) {
-        boolean walk =true;
-        if(game.grid().get(direction.nextPosition(getPosition()))!=null){
-            Decor decor = game.grid().get(direction.nextPosition(getPosition()));
-            walk = decor.walkableBy(this);
+    public void push(Box box){
+        Position newPosition = getDirection().nextPosition(box.getPosition());
+        Set<GameObject> setObject = game.getGameObjects(newPosition);
+        setObject.add(game.grid().get(newPosition));
+        setObject.remove(null);
+        if (setObject.size()==0){
+            game.grid().remove(box.getPosition());
+            game.grid().set(newPosition, box);
+            box.setPosition(newPosition);
         }
-        return walk && game.grid().inside(direction.nextPosition(getPosition()));
+    }
+
+    public void push (Bomb bomb){
+        Position newPosition = getDirection().nextPosition(bomb.getPosition(),bomb.getRange());
+        if (game.grid().inside(newPosition)){
+            bomb.setPosition(newPosition);
+        }else{
+            System.out.println("opposit");
+            Direction oppositeDirection = getDirection().opposite();
+            while( !game.grid().inside(newPosition)){
+                newPosition = oppositeDirection.nextPosition(newPosition);
+                System.out.println(newPosition);
+            }
+            bomb.setPosition(newPosition);
+        }
 
     }
 

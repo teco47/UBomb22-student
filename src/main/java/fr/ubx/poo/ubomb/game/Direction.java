@@ -46,4 +46,18 @@ public enum Direction {
         return nextPosition(pos, 1);
     }
 
+    public Direction opposite (){
+        switch (this){
+            case UP :
+                return DOWN;
+            case DOWN:
+                return UP;
+            case LEFT:
+                return RIGHT;
+            case RIGHT:
+                return LEFT;
+            default:
+                return UP;
+        }
+    }
 }

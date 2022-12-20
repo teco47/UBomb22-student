@@ -93,10 +93,4 @@ public class Monster extends Character{
         }
         moveMonster();
     }
-
-    @Override
-    public void trigger(String flag) {
-    }
-
-    public void setTimerMove(int duration){ timerMove = new Timer(duration);}
 }
