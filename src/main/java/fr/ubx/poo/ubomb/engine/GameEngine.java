@@ -252,11 +252,12 @@ public final class GameEngine {
         }.start();
     }
 
-    private int damage(Position src , Direction direction, int range, Game game){
-        boolean blocked= false;
+    private int damageRange(Position src , Direction direction, int range, Game game){
+        boolean blocked = false;
         int i=-1;
         while (!blocked && i<range){
             i++;
+            if (!(game.grid().inside(direction.nextPosition(src,i+1)))){blocked=true;}
             Set<GameObject> list  = game.getGameObjects(direction.nextPosition(src,i));
             list.add(game.grid().get(direction.nextPosition(src,i)));
             list.remove(null);
@@ -270,10 +271,10 @@ public final class GameEngine {
     }
 
     private void explosion (Bomb bomb){
-        animateExplosion(bomb.getPosition(),Direction.DOWN.nextPosition(bomb.getPosition(),damage(bomb.getPosition(),Direction.DOWN,bomb.getRange(),bomb.game)),bomb.game);
-        animateExplosion(bomb.getPosition(),Direction.UP.nextPosition(bomb.getPosition(),damage(bomb.getPosition(),Direction.UP,bomb.getRange(),bomb.game)),bomb.game);
-        animateExplosion(bomb.getPosition(),Direction.RIGHT.nextPosition(bomb.getPosition(),damage(bomb.getPosition(),Direction.RIGHT,bomb.getRange(),bomb.game)),bomb.game);
-        animateExplosion(bomb.getPosition(),Direction.LEFT.nextPosition(bomb.getPosition(),damage(bomb.getPosition(),Direction.LEFT,bomb.getRange(),bomb.game)),bomb.game);
+        animateExplosion(bomb.getPosition(),Direction.DOWN.nextPosition(bomb.getPosition(), damageRange(bomb.getPosition(),Direction.DOWN,bomb.getRange(),bomb.game)),bomb.game);
+        animateExplosion(bomb.getPosition(),Direction.UP.nextPosition(bomb.getPosition(), damageRange(bomb.getPosition(),Direction.UP,bomb.getRange(),bomb.game)),bomb.game);
+        animateExplosion(bomb.getPosition(),Direction.RIGHT.nextPosition(bomb.getPosition(), damageRange(bomb.getPosition(),Direction.RIGHT,bomb.getRange(),bomb.game)),bomb.game);
+        animateExplosion(bomb.getPosition(),Direction.LEFT.nextPosition(bomb.getPosition(), damageRange(bomb.getPosition(),Direction.LEFT,bomb.getRange(),bomb.game)),bomb.game);
 
         bomb.game.bombParameter().retrieveBomb(1);
     }
