@@ -63,13 +63,6 @@ public class Player extends Character{
         setObject.remove(null);
         walk = !setObject.stream().anyMatch(obj -> !obj.walkableBy(this));
         setObject.forEach( (object) -> object.pushBy(this));
-
-        /*if(object!=null){
-            if (object instanceof Box ) {
-                pushBy(this);
-            }
-            walk = ((Decor)object).walkableBy(this);
-        }*/
         return walk && game.grid().inside(direction.nextPosition(getPosition()));
 
     }
@@ -110,7 +103,6 @@ public class Player extends Character{
         if (game.grid().inside(newPosition)){
             bomb.setPosition(newPosition);
         }else{
-            System.out.println("opposit");
             Direction oppositeDirection = getDirection().opposite();
             while( !game.grid().inside(newPosition)){
                 newPosition = oppositeDirection.nextPosition(newPosition);

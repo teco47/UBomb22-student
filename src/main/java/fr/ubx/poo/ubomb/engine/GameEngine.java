@@ -12,7 +12,6 @@ import fr.ubx.poo.ubomb.go.character.Bomb;
 import fr.ubx.poo.ubomb.go.character.Monster;
 import fr.ubx.poo.ubomb.go.character.Player;
 import fr.ubx.poo.ubomb.go.character.Princess;
-import fr.ubx.poo.ubomb.go.decor.Decor;
 import fr.ubx.poo.ubomb.go.decor.Door;
 import fr.ubx.poo.ubomb.launcher.World;
 import fr.ubx.poo.ubomb.view.*;
@@ -209,7 +208,7 @@ public final class GameEngine {
         currentGame.setKey(ancientGame.key());
         currentGame.setBombParameter(ancientGame.bombParameter());
         for (Monster m: monsters) {
-            m.setTimerMove((int)(10000/ (world.getConfig().monsterVelocity() + 5 * world.getPlayerLevel())));
+            m.setTimerMove((10000/ (world.getConfig().monsterVelocity() + 5 * world.getPlayerLevel())));
             m.setModified(true);
         }
     }
@@ -318,7 +317,7 @@ public final class GameEngine {
         sprites.forEach(sprite -> {
             if (sprite.getGameObject().isDeleted()) {
                 if(!(sprite.getGameObject() instanceof Bomb)){
-                    game.grid().remove(sprite.getPosition());
+                    currentGame.grid().remove(sprite.getPosition());
                 }
                 cleanUpSprites.add(sprite);
             }

@@ -26,7 +26,7 @@ public class Game {
         this.configuration = configuration;
         this.grid = grid;
 
-        bombParameter = new BombParameter(this.configuration().bombBagCapacity());
+        bombParameter = new BombParameter(configuration.bombBagCapacity());
         player = new Player(this, configuration.playerPosition());
         monsters = new HashSet<>();
         for(Position pos : grid().monstersSet()){

@@ -93,4 +93,6 @@ public class Monster extends Character{
         }
         moveMonster();
     }
+
+    public void setTimerMove(int duration){ timerMove = new Timer(duration);}
 }
