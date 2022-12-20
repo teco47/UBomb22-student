@@ -74,11 +74,11 @@ public class Monster extends Character{
         // This method is called only if the move is possible, do not check again
         Position nextPos = direction.nextPosition(getPosition());
         Set<GameObject> next = game.getGameObjects(nextPos);
-        for (GameObject go : next) {
+        /*for (GameObject go : next) {
             if (go instanceof Player player){
                 player.updateLives(-1);
             }
-        }
+        }*/
         setPosition(nextPos);
         loopMove = false;
         timerMove.start();
@@ -87,7 +87,6 @@ public class Monster extends Character{
     @Override
     public void update(long now) {
         super.update(now);
-        System.out.println("i'ma monster");
         timerMove.update(now);//update all timer
         if(!timerMove.isRunning()){
             loopMove =true;
@@ -95,7 +94,5 @@ public class Monster extends Character{
         moveMonster();
     }
 
-    @Override
-    public void trigger(String flag) {
-    }
+    public void setTimerMove(int duration){ timerMove = new Timer(duration);}
 }

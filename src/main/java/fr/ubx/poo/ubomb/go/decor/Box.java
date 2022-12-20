@@ -5,6 +5,7 @@
 package fr.ubx.poo.ubomb.go.decor;
 
 import fr.ubx.poo.ubomb.game.Position;
+import fr.ubx.poo.ubomb.go.character.Player;
 
 public class Box extends Decor {
     public Box(Position position) {
@@ -13,4 +14,10 @@ public class Box extends Decor {
 
     @Override
     public boolean explode() {remove(); return false;}
+
+    @Override
+    public void pushBy(Player player) {
+        player.push(this);
+    }
+
 }

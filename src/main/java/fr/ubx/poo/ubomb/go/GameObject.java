@@ -7,7 +7,7 @@ package fr.ubx.poo.ubomb.go;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
 
-public abstract class GameObject implements Walkable {
+public abstract class GameObject implements Walkable, Pushable {
     public final Game game;
     private boolean deleted = false;
     private boolean modified = true;
@@ -28,7 +28,6 @@ public abstract class GameObject implements Walkable {
 
     public void setPosition(Position position) {
         this.position = position;
-        //System.out.println("Position : "+this.getPosition());
         setModified(true);
     }
 
@@ -49,6 +48,4 @@ public abstract class GameObject implements Walkable {
     }
 
     public boolean explode() {return false;}
-
-    public void trigger(String flag){ return;}
 }

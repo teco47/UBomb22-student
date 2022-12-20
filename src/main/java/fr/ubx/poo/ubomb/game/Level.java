@@ -18,6 +18,7 @@ public class Level implements Grid {
 
     private final Map<Position, Decor> elements = new HashMap<>();
     private final HashSet<Position> characterMonster = new HashSet<>();
+    private final Set<Door> doorSet = new HashSet<>();
     private Position princess;
 
     public Level(MapLevel entities) {
@@ -29,6 +30,7 @@ public class Level implements Grid {
             for (int j = 0; j < height; j++) {
                 Position position = new Position(i, j);
                 Entity entity = entities.get(i, j);
+                Door d = null;
                 switch (entity) {
                     case Stone:
                         elements.put(position, new Stone(position));
@@ -46,13 +48,19 @@ public class Level implements Grid {
                         elements.put(position, new Heart(position));
                         break;
                     case DoorPrevOpened:
-                        elements.put(position, new Door(position,true,false));
+                        d = new Door(position,true,false);
+                        elements.put(position, d);
+                        doorSet.add(d);
                         break;
                     case DoorNextOpened:
-                        elements.put(position, new Door(position,true,true));
+                        d = new Door(position,true,true);
+                        elements.put(position, d);
+                        doorSet.add(d);
                         break;
                     case DoorNextClosed:
-                        elements.put(position, new Door(position,true));
+                        d = new Door(position,true);
+                        elements.put(position, d);
+                        doorSet.add(d);
                         break;
                     case BombRangeInc:
                         elements.put(position, new BombRange(position));
@@ -117,6 +125,11 @@ public class Level implements Grid {
             throw new IllegalArgumentException("Illegal Position");
         if (decor != null)
             elements.put(position, decor);
+    }
+
+    @Override
+    public Set<Door> doorSet() {
+        return doorSet;
     }
 
     public HashSet<Position> monstersSet(){

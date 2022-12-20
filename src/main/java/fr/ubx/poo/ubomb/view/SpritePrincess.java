@@ -18,7 +18,6 @@ public class SpritePrincess extends Sprite {
 
     @Override
     public void updateImage() {
-        Princess princess = (Princess) getGameObject();
         Image image = ImageResource.PRINCESS.getImage();
         setImage(image);
     }

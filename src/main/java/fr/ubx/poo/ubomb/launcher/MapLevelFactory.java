@@ -26,13 +26,10 @@ public class MapLevelFactory {
                     sizeX = entities.size();
                 }
                 sizeY++;
-                System.out.println("");
             } else {
-                System.out.print(level.charAt(i));
                 entities.add(Entity.fromCode(level.charAt(i)));
                 if(Character.isDigit(level.charAt(i+1))){
                     for(int j = 1; j< Character.getNumericValue(level.charAt(i+1)); j++){
-                        System.out.print(level.charAt(i));
                         entities.add(Entity.fromCode(level.charAt(i)));
                     }
                     i++;
