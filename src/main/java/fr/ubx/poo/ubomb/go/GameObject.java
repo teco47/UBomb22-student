@@ -28,7 +28,6 @@ public abstract class GameObject implements Walkable, Pushable {
 
     public void setPosition(Position position) {
         this.position = position;
-        //System.out.println("Position : "+this.getPosition());
         setModified(true);
     }
 

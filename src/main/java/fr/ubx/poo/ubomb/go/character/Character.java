@@ -16,16 +16,14 @@ public abstract class Character extends GameObject  implements Movable, TakeVisi
     private boolean isInvisibility = false;
 
     private Timer timerInvisibility;
+    private final int fractionStepInvisibility = 10;
+    private boolean stepInvisibility = false;
 
     public Character(Game game, Position position, int lives, long invincibilityTime) {
         super(game, position);
         this.direction = Direction.DOWN;
         this.lives = lives;
         this.timerInvisibility = new Timer(invincibilityTime);
-    }
-
-    public Character(Position position) {
-        super(position);
     }
 
     public int getLives(){
@@ -58,7 +56,9 @@ public abstract class Character extends GameObject  implements Movable, TakeVisi
     public boolean getIsInvisibility() {
         return isInvisibility;
     }
-    public void setIsInvisibility(boolean invincible) {isInvisibility=invincible;}
+    public boolean changeStepInvisibility(){ return timerInvisibility.remaining()%fractionStepInvisibility == 0;}
+    public boolean stepInvisibility(){ return stepInvisibility;}
+    public void setIsInvisibility(boolean invincible) { isInvisibility=invincible;}
 
     public void requestMove(Direction direction) {
         if (direction != this.direction) {
@@ -76,8 +76,14 @@ public abstract class Character extends GameObject  implements Movable, TakeVisi
 
     public void update(long now) {
         timerInvisibility.update(now);
-        if(isInvisibility && !timerInvisibility.isRunning()){
-            isInvisibility = false;
+        if(isInvisibility){
+            if(!timerInvisibility.isRunning()) {
+                isInvisibility = false;
+                setModified(true);
+            } else if(changeStepInvisibility()){
+                stepInvisibility = !stepInvisibility;
+                setModified(true);
+            }
         }
     }
 
