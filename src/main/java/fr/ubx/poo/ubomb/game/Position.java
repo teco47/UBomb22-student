@@ -6,5 +6,4 @@ public record Position (int x, int y) {
         this(position.x, position.y);
     }
 
-
 }

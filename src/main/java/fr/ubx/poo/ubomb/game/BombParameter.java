@@ -11,10 +11,6 @@ public class BombParameter {
         return currentCount;
     }
 
-    public int getMaxCount() {
-        return maxCount;
-    }
-
     public int getRange() {
         return range;
     }
@@ -27,7 +23,7 @@ public class BombParameter {
             }
         }
     }
-    public boolean retrieveBomb(int count) {
+    public boolean updateCurrentCount(int count) {
         if(currentCount+count < 0){
             return false;
         }

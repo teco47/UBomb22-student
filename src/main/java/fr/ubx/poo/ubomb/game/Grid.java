@@ -16,7 +16,6 @@ public interface Grid {
 
     Collection<Decor> values();
 
-
     boolean inside(Position nextPos);
 
     void set(Position position, Decor decor);
@@ -24,5 +23,6 @@ public interface Grid {
     Set<Door> doorSet();
 
     HashSet<Position> monstersSet();
+
     Position getPrincess();
 }

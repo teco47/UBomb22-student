@@ -18,7 +18,6 @@ import javafx.scene.text.Text;
 
 public class StatusBar {
     public static final int height = 55;
-    private final Game game;
     private final DropShadow ds = new DropShadow();
     private final HBox hBox = new HBox();
     private final Text lives = new Text();
@@ -29,8 +28,6 @@ public class StatusBar {
 
 
     public StatusBar(Group root, int sceneWidth, int sceneHeight, Game game) {
-        // Status bar
-        this.game = game;
 
         level.getStyleClass().add("level");
         level.getChildren().add(new ImageView(ImageResourceFactory.digit(1).getImage()));
@@ -71,7 +68,6 @@ public class StatusBar {
     }
 
     public void update(Game game) {
-        Player player = game.player();
         lives.setText(Integer.toString(game.player().getLives()));
         bombRange.setText(Integer.toString(game.bombParameter().getRange()));
         availableBombs.setText(Integer.toString(game.bombParameter().getCurrentCount()));

@@ -9,16 +9,15 @@ import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
-import fr.ubx.poo.ubomb.go.decor.Decor;
 
 import java.util.Random;
 import java.util.Set;
 
 public class Monster extends Character{
 
+    private Random rand = new Random();
     private boolean loopMove = false;
     private Timer timerMove;
-
 
     public Monster(Game game, Position position, int lives) {
         super(game, position,lives,game.configuration().monsterInvisibilityTime());
@@ -26,32 +25,8 @@ public class Monster extends Character{
         timerMove.start();
     }
 
-    @Override
-    public final boolean canMove(Direction direction) {
-        boolean walk = true;
-        if(game.grid().get(direction.nextPosition(getPosition()))!=null){
-            Decor decor = game.grid().get(direction.nextPosition(getPosition()));
-            walk = decor.walkableBy(this);
-        } else {
-
-            Position nextPos = direction.nextPosition(getPosition());
-            Set<GameObject> next = game.getGameObjects(nextPos);
-            if(game.grid().get(direction.nextPosition(getPosition()))!=null) {
-                next.add(game.grid().get(direction.nextPosition(getPosition())));
-            }
-            for (GameObject go : next) {
-                if(!go.walkableBy(this)){
-                    walk=false;
-                    break;
-                }
-            }
-        }
-        return walk && game.grid().inside(direction.nextPosition(getPosition()));
-    }
-
     public void moveMonster(){
         if(loopMove){
-            Random rand = new Random();
             int direction = rand.nextInt(4);
             switch (direction){
                 case 0:
@@ -70,16 +45,21 @@ public class Monster extends Character{
         }
     }
 
+    @Override
+    public final boolean canMove(Direction direction) {
+        boolean walk;
+        Position nextPos = direction.nextPosition(getPosition());
+        walk = game.grid().inside(nextPos)?true: false;
+        if (walk){
+            Set<GameObject> setObject = game.getAllGameobject(nextPos);
+            walk = !setObject.stream().anyMatch(obj -> !obj.walkableBy(this));
+        }
+        return walk ;
+    }
+
     public void doMove(Direction direction) {
         // This method is called only if the move is possible, do not check again
-        Position nextPos = direction.nextPosition(getPosition());
-        Set<GameObject> next = game.getGameObjects(nextPos);
-        /*for (GameObject go : next) {
-            if (go instanceof Player player){
-                player.updateLives(-1);
-            }
-        }*/
-        setPosition(nextPos);
+        setPosition(direction.nextPosition(getPosition()));
         loopMove = false;
         timerMove.start();
     }
@@ -87,7 +67,7 @@ public class Monster extends Character{
     @Override
     public void update(long now) {
         super.update(now);
-        timerMove.update(now);//update all timer
+        timerMove.update(now);
         if(!timerMove.isRunning()){
             loopMove =true;
         }
