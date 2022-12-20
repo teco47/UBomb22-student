@@ -81,7 +81,6 @@ public abstract class Character extends GameObject  implements Movable, TakeVisi
             } else if(changeStepInvisibility()){
                 stepInvisibility = !stepInvisibility;
                 setModified(true);
-                System.out.println("CHangement damage, : "+stepInvisibility);
             }
         }
     }

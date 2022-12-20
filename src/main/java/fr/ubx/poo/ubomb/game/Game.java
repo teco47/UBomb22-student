@@ -30,7 +30,7 @@ public class Game {
         player = new Player(this, configuration.playerPosition());
         monsters = new HashSet<>();
         for(Position pos : grid().monstersSet()){
-            monsters.add(new Monster(this,pos,level));
+            monsters.add(new Monster(this,pos,(int)Math.ceil((double)level/2)));
         }
         if(grid.getPrincess() != null){
             princess = new Princess(this, grid.getPrincess());

@@ -40,6 +40,7 @@ public final class GameEngine {
     private final World world;
     private final List<Game> levels;
     private Game currentGame;
+    private boolean onTravel;
 
     private Player player;
     private Princess princess;
@@ -74,7 +75,6 @@ public final class GameEngine {
         this.princess = currentGame.princess();
         this.monsters = currentGame.monster();
         this.bombs = currentGame.bombs();
-        System.out.println("Changement de monde");
         initialize();
         buildAndSetGameLoop();
     }
@@ -109,10 +109,6 @@ public final class GameEngine {
         sprites.add(new SpritePlayer(layer, player));
         if(princess!=null){
             sprites.add(new SpritePrincess(layer,princess));
-            System.out.println("Princess position : "+princess.getPosition());
-        }
-        else {
-            System.out.println("pas de princesse");
         }
 
         for(Monster m : monsters){
@@ -182,20 +178,31 @@ public final class GameEngine {
     }
     
     private void checkTravel(){
+        boolean onDoor = false;
         for (Door d : currentGame.grid().doorSet()) {
             if(player.getPosition().equals(d.getPosition())){
-                gameLoop.stop();
-                world.setPlayerLevel(world.getPlayerLevel() + (d.upStair() ? +1 : -1));
-                Game ancientGame = currentGame;
-                setup(world.getPlayerLevel());
-                changeGame(ancientGame);
-                gameLoop.start();
+                if(!onTravel){
+                    onTravel = true;
+                    gameLoop.stop();
+                    world.setPlayerLevel(world.getPlayerLevel() + (d.upStair() ? +1 : -1));
+                    Game ancientGame = currentGame;
+                    setup(world.getPlayerLevel());
+                    changeGame(ancientGame,d.upStair());
+                    gameLoop.start();
+                }
+                onDoor = true;
             }
         }
+        if(!onDoor){ onTravel = false; }
     }
 
-    private void changeGame(Game ancientGame){
-        ancientGame.player().setPosition(world.getConfig().playerPosition());
+    private void changeGame(Game ancientGame, boolean upStairs){
+        for (Door d : currentGame.grid().doorSet()) {
+            if (d.upStair() == !upStairs && d.isOpen()) {
+                currentGame.player().setPosition(d.getPosition());
+                break;
+            }
+        }
         currentGame.player().setLives(ancientGame.player().getLives());
         currentGame.player().setModified(true);
         if(currentGame.princess()!=null){currentGame.princess().setModified(true);}
