@@ -74,11 +74,11 @@ public class Monster extends Character{
         // This method is called only if the move is possible, do not check again
         Position nextPos = direction.nextPosition(getPosition());
         Set<GameObject> next = game.getGameObjects(nextPos);
-        for (GameObject go : next) {
+        /*for (GameObject go : next) {
             if (go instanceof Player player){
                 player.updateLives(-1);
             }
-        }
+        }*/
         setPosition(nextPos);
         loopMove = false;
         timerMove.start();

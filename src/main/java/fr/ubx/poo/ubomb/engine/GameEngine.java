@@ -111,7 +111,10 @@ public final class GameEngine {
         }
 
         for(Monster m : monsters){
-            sprites.add((new SpriteMonster(layer,m)));
+            sprites.add(new SpriteMonster(layer,m));
+        }
+        for(Bomb b : bombs){
+            sprites.add(new SpriteBomb(layer,b));
         }
     }
 
@@ -125,7 +128,7 @@ public final class GameEngine {
 
                 // Do actions
                 update(now);
-                //createNewBombs(now);
+
                 checkCollision(now);
                 checkExplosions();
 
@@ -174,6 +177,15 @@ public final class GameEngine {
 
     private void checkCollision(long now) {
         // Check a collision between a monster and the player
+        for (Monster m : monsters) {
+            if(m.getPosition().equals(player.getPosition())){
+                player.updateLives(-1);
+            }
+        }
+    }
+
+    private boolean checkOnPrincess(){
+        return princess != null && princess.getPosition().equals(player.getPosition());
     }
     
     private void checkTravel(){
@@ -205,8 +217,10 @@ public final class GameEngine {
         currentGame.player().setLives(ancientGame.player().getLives());
         currentGame.player().setModified(true);
         if(currentGame.princess()!=null){currentGame.princess().setModified(true);}
+
         currentGame.setKey(ancientGame.key());
         currentGame.setBombParameter(ancientGame.bombParameter());
+        for(Bomb b : currentGame.bombs()){ b.setModified(true); }
         for (Monster m: monsters) {
             m.setTimerMove((10000/ (world.getConfig().monsterVelocity() + 5 * world.getPlayerLevel())));
             m.setModified(true);
@@ -307,7 +321,7 @@ public final class GameEngine {
             gameLoop.stop();
             showMessage("Perdu!", Color.RED);
         }
-        if (currentGame.getOnPrincess()) {
+        if (checkOnPrincess()) {
             gameLoop.stop();
             showMessage("Victoire", Color.RED);
         }

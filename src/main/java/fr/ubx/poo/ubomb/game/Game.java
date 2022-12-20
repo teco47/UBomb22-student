@@ -20,7 +20,6 @@ public class Game {
     final private Set<Bomb> bombs;
     private int key=0;
     private Grid grid;
-    private boolean onPrincess;
 
     public Game(Configuration configuration, Grid grid, int level) {
         this.configuration = configuration;
@@ -28,14 +27,15 @@ public class Game {
 
         bombParameter = new BombParameter(configuration.bombBagCapacity());
         player = new Player(this, configuration.playerPosition());
+
         monsters = new HashSet<>();
         for(Position pos : grid().monstersSet()){
             monsters.add(new Monster(this,pos,(int)Math.ceil((double)level/2)));
         }
+
         if(grid.getPrincess() != null){
             princess = new Princess(this, grid.getPrincess());
         } else { princess = null;}
-        onPrincess = false;
         bombs = new HashSet<>();
     }
     
@@ -60,11 +60,6 @@ public class Game {
         return gos;
     }
 
-
-    public void removeBonus(Position position){
-        grid.remove(position);
-    }
-
     public Configuration configuration() {
         return configuration;
     }
@@ -81,13 +76,7 @@ public class Game {
     public Princess princess(){ return this.princess;}
     public Set<Monster> monster(){ return this.monsters;}
     public Set<Bomb> bombs(){ return this.bombs;}
-
-
-    public void setOnPrincess(boolean on){
-        onPrincess = on;
-    }
     public int key(){return key;}
     public void addKey(int i){ key+=i;}
     public void setKey(int nb){key = nb;}
-    public boolean getOnPrincess() { return onPrincess;}
 }

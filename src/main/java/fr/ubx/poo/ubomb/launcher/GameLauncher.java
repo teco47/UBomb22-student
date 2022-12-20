@@ -24,7 +24,6 @@ public class GameLauncher {
                     l+1
             ));
         }
-        MapLevelFactory firstMap = new MapLevelFactory(world.getLevel(0));
         return levels;
     }
 
