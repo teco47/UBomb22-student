@@ -87,15 +87,10 @@ public class Monster extends Character{
     @Override
     public void update(long now) {
         super.update(now);
-        System.out.println("i'ma monster");
         timerMove.update(now);//update all timer
         if(!timerMove.isRunning()){
             loopMove =true;
         }
         moveMonster();
-    }
-
-    @Override
-    public void trigger(String flag) {
     }
 }

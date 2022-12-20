@@ -69,8 +69,10 @@ public abstract class Character extends GameObject  implements Movable, TakeVisi
             doMove(direction);
         }
     }
-    public abstract void doMove(Direction direction);
+
     public abstract boolean canMove(Direction direction);
+
+    public abstract void doMove(Direction direction);
 
     public void update(long now) {
         timerInvisibility.update(now);
