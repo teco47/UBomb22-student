@@ -5,7 +5,6 @@
 package fr.ubx.poo.ubomb.go.decor;
 
 import fr.ubx.poo.ubomb.game.Position;
-import fr.ubx.poo.ubomb.go.Pushable;
 import fr.ubx.poo.ubomb.go.character.Player;
 
 public class Box extends Decor {

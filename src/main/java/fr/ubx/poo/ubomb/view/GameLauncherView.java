@@ -15,9 +15,6 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.List;
-import java.util.Properties;
-
-import static javafx.beans.property.IntegerProperty.integerProperty;
 
 public class GameLauncherView extends BorderPane {
 

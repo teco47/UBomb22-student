@@ -4,11 +4,8 @@
 
 package fr.ubx.poo.ubomb.go.decor;
 
-import fr.ubx.poo.ubomb.game.Game;
-import fr.ubx.poo.ubomb.game.Level;
 import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.character.Player;
-import fr.ubx.poo.ubomb.launcher.MapLevelFactory;
 
 public class Door extends Decor {
     private boolean open;

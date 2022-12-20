@@ -29,7 +29,6 @@ public class World {
         try {
             Reader in = new FileReader(fileProperties);
             prop.load(in);
-            boolean compression = Boolean.parseBoolean(prop.getProperty("compression"));
             nbLevel = prop.getProperty("levels") != null ? Integer.parseInt(prop.getProperty("levels")) : 1;
             levels = new ArrayList<>();
             for(int l=1; l <= nbLevel; l++){
@@ -63,9 +62,6 @@ public class World {
         return nbLevel;
     }
 
-    public List<String> getLevels() {
-        return levels;
-    }
     public String getLevel(int index) {
         return levels.get(index);
     }
