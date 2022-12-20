@@ -88,13 +88,15 @@ public class Player extends Character{
 
     public void push(Box box){
         Position newPosition = getDirection().nextPosition(box.getPosition());
-        Set<GameObject> setObject = game.getGameObjects(newPosition);
-        setObject.add(game.grid().get(newPosition));
-        setObject.remove(null);
-        if (setObject.size()==0){
-            game.grid().remove(box.getPosition());
-            game.grid().set(newPosition, box);
-            box.setPosition(newPosition);
+        if (game.grid().inside(newPosition)){
+            Set<GameObject> setObject = game.getGameObjects(newPosition);
+            setObject.add(game.grid().get(newPosition));
+            setObject.remove(null);
+            if (setObject.size()==0){
+                game.grid().remove(box.getPosition());
+                game.grid().set(newPosition, box);
+                box.setPosition(newPosition);
+            }
         }
     }
 
