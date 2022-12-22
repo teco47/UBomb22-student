@@ -10,8 +10,7 @@ import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
 
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class Monster extends Character{
 
@@ -26,22 +25,14 @@ public class Monster extends Character{
     }
 
     public void moveMonster(){
-        if(loopMove){
-            int direction = rand.nextInt(4);
-            switch (direction){
-                case 0:
-                    requestMove(Direction.UP);
-                    break;
-                case 1:
-                    requestMove(Direction.DOWN);
-                    break;
-                case 2:
-                    requestMove(Direction.LEFT);
-                    break;
-                case 3:
-                    requestMove(Direction.RIGHT);
-                    break;
-            }
+        List<Direction> available = new ArrayList<>();
+        for (Direction dir : Direction.values()){
+            if (canMove(dir)){available.add(dir);}
+        }
+        if (available.size() > 0 ){
+            requestMove(Direction.randomSet(available));
+        }else{
+            requestMove(Direction.random());//simulation of a movement.
         }
     }
 
@@ -60,8 +51,6 @@ public class Monster extends Character{
     public void doMove(Direction direction) {
         // This method is called only if the move is possible, do not check again
         setPosition(direction.nextPosition(getPosition()));
-        loopMove = false;
-        timerMove.start();
     }
 
     @Override
@@ -69,9 +58,9 @@ public class Monster extends Character{
         super.update(now);
         timerMove.update(now);
         if(!timerMove.isRunning()){
-            loopMove =true;
+            moveMonster();
+            timerMove.start();
         }
-        moveMonster();
     }
 
     public void setTimerMove(int duration){ timerMove = new Timer(duration);}

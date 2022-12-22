@@ -23,24 +23,16 @@ public class Player extends Character implements PushVisitor {
     }
     
     @Override
-    public void take(Key key) {
-        game.addKey(1);
-    }
+    public void take(Key key) {game.addKey(1); key.remove();}
 
     @Override
-    public void take(Heart heart) {
-        updateLives(1);
-    }
+    public void take(Heart heart) {updateLives(1);heart.remove();}
 
     @Override
-    public void take(BombRange bombRange) {
-        game.bombParameter().updateRange((bombRange.getBonus()?1:-1));
-    }
+    public void take(BombRange bombRange) {game.bombParameter().updateRange((bombRange.getBonus()?1:-1)); bombRange.remove();}
 
     @Override
-    public void take(BombCount bombCount) {
-        game.bombParameter().updateMaxCount((bombCount.getBonus()?1:-1));
-    }
+    public void take(BombCount bombCount) {game.bombParameter().updateMaxCount((bombCount.getBonus()?1:-1)); bombCount.remove();}
 
     public final boolean canMove(Direction direction) {
         boolean walk;
@@ -60,12 +52,7 @@ public class Player extends Character implements PushVisitor {
         // This method is called only if the move is possible, do not check again
         Position nextPos = direction.nextPosition(getPosition());
         Set<GameObject> next = game.getAllGameobject(nextPos);
-        for (GameObject go : next) {
-            if (go instanceof Bonus bonus) {
-                bonus.takenBy(this);
-                bonus.remove();
-            }
-        }
+        next.forEach(obj -> obj.takenBy(this));
         setPosition(nextPos);
     }
     @Override

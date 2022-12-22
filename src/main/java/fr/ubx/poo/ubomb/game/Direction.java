@@ -4,7 +4,9 @@
 
 package fr.ubx.poo.ubomb.game;
 
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public enum Direction {
     UP {
@@ -38,6 +40,11 @@ public enum Direction {
     public static Direction random() {
         int i = randomGenerator.nextInt(values().length);
         return values()[i];
+    }
+
+    public static Direction randomSet(List<Direction> dirSet){
+        int i = randomGenerator.nextInt(dirSet.size());
+        return dirSet.get(i);
     }
 
     public abstract Position nextPosition(Position pos, int delta);
