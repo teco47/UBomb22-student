@@ -41,5 +41,6 @@ public class BombParameter {
 
     public void updateRange(int range) {
         this.range += range;
+        if(this.range < 0){ this.range = 0; }
     }
 }
