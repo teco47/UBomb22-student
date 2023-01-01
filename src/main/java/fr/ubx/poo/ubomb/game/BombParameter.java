@@ -1,11 +1,11 @@
 package fr.ubx.poo.ubomb.game;
 
 public class BombParameter {
-    private int toReduce, currentCount, range;
+    private int toReduce, maxCount, currentCount, range;
 
     public BombParameter(int count){
         this.toReduce = 0;
-        this.currentCount = count;
+        this.maxCount = this.currentCount = count;
         range = 1;
     }
     public int getCurrentCount() {
@@ -20,14 +20,17 @@ public class BombParameter {
 
         if(count>0) {
             updateCurrentCount(count);
+            maxCount+=count;
         }else{
-            currentCount+=count;
-            if (currentCount < 0){
-                toReduce+=currentCount;
-                currentCount=0;
+            if (maxCount+count>0){ // sum 1+
+                maxCount+=count;
+                currentCount+=count;
+                if (currentCount < 0){
+                    toReduce+=currentCount;
+                    currentCount=0;
+                }
             }
         }
-        System.out.println(toReduce);
     }
     public boolean updateCurrentCount(int count) {
         if (count<0){
@@ -44,7 +47,6 @@ public class BombParameter {
             }
         }
 
-        System.out.println(toReduce);
         return true;
     }
 
