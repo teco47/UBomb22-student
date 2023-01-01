@@ -12,7 +12,6 @@ public class Heart extends Bonus {
         super(position);
     }
 
-
     @Override
     public void takenBy(Player player) {
         player.take(this);

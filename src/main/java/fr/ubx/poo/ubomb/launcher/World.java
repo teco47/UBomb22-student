@@ -25,7 +25,7 @@ public class World {
     }
 
     private void buildWorld(){
-        Properties prop = new Properties();;
+        Properties prop = new Properties();
         try {
             Reader in = new FileReader(fileProperties);
             prop.load(in);

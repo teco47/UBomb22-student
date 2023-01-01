@@ -1,18 +1,15 @@
 package fr.ubx.poo.ubomb.game;
 
 public class BombParameter {
-    private int maxCount, currentCount, range;
+    private int toReduce, currentCount, range;
 
     public BombParameter(int count){
-        this.maxCount = this.currentCount = count;
+        this.toReduce = 0;
+        this.currentCount = count;
         range = 1;
     }
     public int getCurrentCount() {
         return currentCount;
-    }
-
-    public int getMaxCount() {
-        return maxCount;
     }
 
     public int getRange() {
@@ -20,21 +17,34 @@ public class BombParameter {
     }
 
     public void updateMaxCount(int count) {
-        if(maxCount+count>=0) {
-            this.maxCount += count;
-            if (!(this.currentCount == 0 && count < 0)) {
-                this.currentCount += count;
+
+        if(count>0) {
+            updateCurrentCount(count);
+        }else{
+            currentCount+=count;
+            if (currentCount < 0){
+                toReduce+=currentCount;
+                currentCount=0;
             }
         }
+        System.out.println(toReduce);
     }
-    public boolean retrieveBomb(int count) {
-        if(currentCount+count < 0){
-            return false;
+    public boolean updateCurrentCount(int count) {
+        if (count<0){
+            if(currentCount+count < 0){// sum <0
+                return false;
+            }else{
+                currentCount--;
+            }
+        }else{ // count positif
+            toReduce+=count;
+            if(toReduce>0){
+                currentCount += toReduce;
+                toReduce = 0;
+            }
         }
-        currentCount+=count;
-        if (currentCount > maxCount){
-            currentCount = maxCount;
-        }
+
+        System.out.println(toReduce);
         return true;
     }
 

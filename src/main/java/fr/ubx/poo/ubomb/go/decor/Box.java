@@ -13,11 +13,10 @@ public class Box extends Decor {
     }
 
     @Override
-    public boolean explode() {remove(); return false;}
+    public boolean explode() {remove(); return true;}
 
     @Override
     public void pushBy(Player player) {
         player.push(this);
     }
-
 }

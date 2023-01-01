@@ -8,10 +8,9 @@ import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.Movable;
 import fr.ubx.poo.ubomb.go.TakeVisitor;
 
-public abstract class Character extends GameObject  implements Movable, TakeVisitor {
+public abstract class Character extends GameObject implements Movable, TakeVisitor {
 
     private Direction direction;
-    private boolean moveRequested = false;
     private int lives;
     private boolean isInvisibility = false;
 
@@ -79,11 +78,10 @@ public abstract class Character extends GameObject  implements Movable, TakeVisi
         if(isInvisibility){
             if(!timerInvisibility.isRunning()) {
                 isInvisibility = false;
-                setModified(true);
             } else if(changeStepInvisibility()){
                 stepInvisibility = !stepInvisibility;
-                setModified(true);
             }
+            setModified(true);
         }
     }
 

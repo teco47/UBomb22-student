@@ -10,11 +10,7 @@ import java.util.*;
 public class Level implements Grid {
 
     private final int width;
-
     private final int height;
-
-    private final MapLevel entities;
-
 
     private final Map<Position, Decor> elements = new HashMap<>();
     private final HashSet<Position> characterMonster = new HashSet<>();
@@ -22,7 +18,6 @@ public class Level implements Grid {
     private Position princess;
 
     public Level(MapLevel entities) {
-        this.entities = entities;
         this.width = entities.width();
         this.height = entities.height();
 
@@ -30,7 +25,7 @@ public class Level implements Grid {
             for (int j = 0; j < height; j++) {
                 Position position = new Position(i, j);
                 Entity entity = entities.get(i, j);
-                Door d = null;
+                Door d;
                 switch (entity) {
                     case Stone:
                         elements.put(position, new Stone(position));
@@ -58,18 +53,18 @@ public class Level implements Grid {
                         doorSet.add(d);
                         break;
                     case DoorNextClosed:
-                        d = new Door(position,true);
+                        d = new Door(position,false,true);
                         elements.put(position, d);
                         doorSet.add(d);
                         break;
                     case BombRangeInc:
-                        elements.put(position, new BombRange(position));
+                        elements.put(position, new BombRange(position, true));
                         break;
                     case BombRangeDec:
                         elements.put(position, new BombRange(position, false));
                         break;
                     case BombNumberInc:
-                        elements.put(position, new BombCount(position));
+                        elements.put(position, new BombCount(position,true));
                         break;
                     case BombNumberDec:
                         elements.put(position, new BombCount(position, false));
@@ -98,10 +93,8 @@ public class Level implements Grid {
     }
 
     public Decor get(Position position) {
-
-        if(position.x()>=0 && position.x()<width && position.y()>=0 && position.y()<height){
-            return elements.get(position);
-        }return null;
+        if (inside(position)){return elements.get(position);}
+        return null;
     }
 
     @Override

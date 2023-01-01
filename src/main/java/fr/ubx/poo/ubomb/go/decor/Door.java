@@ -11,11 +11,6 @@ public class Door extends Decor {
     private boolean open;
     private boolean upStair;
 
-    public Door(Position position, boolean upStair) {
-        super(position);
-        open = false;
-        this.upStair = upStair;
-    }
     public Door(Position position , boolean open, boolean upStair) {
         super(position);
         this.open = open;
@@ -23,7 +18,7 @@ public class Door extends Decor {
     }
 
     public Boolean setOpen(){
-        boolean already = open? false : true;
+        boolean already = open;
         open = true;
         setModified(true);
         return already;
@@ -36,6 +31,5 @@ public class Door extends Decor {
         return open;
     }
 
-    public boolean isOpen() {return open;}
     public boolean upStair(){return upStair;}
 }

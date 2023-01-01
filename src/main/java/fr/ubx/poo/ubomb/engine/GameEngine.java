@@ -167,7 +167,7 @@ public final class GameEngine {
 
     private void createNewBombs(/*long now*/) {
         if( !bombs.stream().anyMatch(bb -> bb.getPosition()==player.getPosition())  &&
-                currentGame.bombParameter().retrieveBomb(-1)) {
+                currentGame.bombParameter().updateCurrentCount(-1)) {
             Bomb bomb = new Bomb(currentGame, player.getPosition(),currentGame.bombParameter().getRange());
             bombs.add(bomb);
             sprites.add(new SpriteBomb(layer,bomb));
@@ -209,7 +209,7 @@ public final class GameEngine {
 
     private void changeGame(Game ancientGame, boolean upStairs){
         for (Door d : currentGame.grid().doorSet()) {
-            if (d.upStair() == !upStairs && d.isOpen()) {
+            if (d.upStair() == !upStairs && d.getStatus()) {
                 currentGame.player().setPosition(d.getPosition());
                 break;
             }
@@ -272,9 +272,7 @@ public final class GameEngine {
         while (!blocked && i<range){
             i++;
             if (!(game.grid().inside(direction.nextPosition(src,i+1)))){blocked=true;}
-            Set<GameObject> list  = game.getGameObjects(direction.nextPosition(src,i));
-            list.add(game.grid().get(direction.nextPosition(src,i)));
-            list.remove(null);
+            Set<GameObject> list  = game.getAllGameobject(direction.nextPosition(src,i));
             for(GameObject iter : list){
                 if (iter.explode() && i!=0){
                     blocked = true;
@@ -290,7 +288,7 @@ public final class GameEngine {
         animateExplosion(bomb.getPosition(),Direction.RIGHT.nextPosition(bomb.getPosition(), damageRange(bomb.getPosition(),Direction.RIGHT,bomb.getRange(),bomb.game)),bomb.game);
         animateExplosion(bomb.getPosition(),Direction.LEFT.nextPosition(bomb.getPosition(), damageRange(bomb.getPosition(),Direction.LEFT,bomb.getRange(),bomb.game)),bomb.game);
 
-        bomb.game.bombParameter().retrieveBomb(1);
+        bomb.game.bombParameter().updateCurrentCount(1);
     }
 
     private void update(long now) {

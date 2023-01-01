@@ -60,6 +60,14 @@ public class Game {
         return gos;
     }
 
+    public Set<GameObject> getAllGameobject(Position p){
+        Set<GameObject> list = getGameObjects(p);
+        list.add(grid().get(p));
+        list.remove(null);
+        return list;
+    }
+
+
     public Configuration configuration() {
         return configuration;
     }
